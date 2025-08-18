@@ -13,26 +13,29 @@ import ChallengeUsersLowUICode from "./ChallengerUserLowUICode";
  */
 export default function ChallengeUsersLow() {
   /**
-   * ES: Estado del componente
-   * - `users`: fuente de verdad de la data (llega del fetch). Arreglo tipado de User.
-   * - `search`: término que el usuario escribe para filtrar.
+   * ES: Definición de los estados del componente.
+   * - 'users': Almacena la lista de usuarios obtenida de la API. Es nuestra única "fuente de la verdad".
+   * - 'search': Almacena el texto que el usuario escribe en el campo de búsqueda.
    *
    * ¿Por qué useState?
-   * - ES: Porque ambos valores cambian en el tiempo y deben gatillar re-render.
-   * - EN: Both values change over time and must trigger re-renders.
+   * - ES: Usamos 'useState' porque tanto la lista de usuarios como el término de búsqueda son datos que cambian
+   *       con el tiempo y cada cambio debe provocar que el componente se vuelva a renderizar para mostrar la UI actualizada.
+   * - EN: We use 'useState' because both the user list and the search term are data that change
+   *       over time, and each change must trigger a re-render to display the updated UI.
    *
-   * ¿Por qué tipar `User[]`?
-   * - ES: Para que TypeScript avise si usamos mal propiedades (ej. user.name).
-   * - EN: TypeScript will warn if we misuse properties (e.g., user.name).
+   * ¿Por qué tipar 'User[]'?
+   * - ES: Para que TypeScript nos ayude a evitar errores comunes, como intentar acceder a una propiedad que no existe
+   *       (ej. 'user.nombre' en vez de 'user.name') y para tener autocompletado en el editor.
+   * - EN: So TypeScript can help us avoid common errors, like trying to access a non-existent property
+   *       (e.g., 'user.nombre' instead of 'user.name') and to get editor autocompletion.
    */
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
 
   /**
-   * ES: Efecto para cargar datos al montar (once).
-   * - `[]` como dependencia significa: “solo al montar”, evitando múltiples fetch.
-   * - Usamos fetch nativo por simplicidad; en producción podríamos abstraerlo
-   *   (servicio/API layer) para testear mejor y reutilizar.
+   * ES: Efecto para cargar datos cuando el componente se monta por primera vez.
+   * - 'useEffect' es el hook de React para manejar "efectos secundarios", como las llamadas a una API.
+   * - El array
    *
    * EN: Effect to load data on mount (once).
    * - `[]` dependency means “only on mount”, avoiding multiple fetches.

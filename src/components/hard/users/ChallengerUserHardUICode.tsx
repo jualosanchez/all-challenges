@@ -2,6 +2,7 @@ import CodeViewer from '../../CodeViewer';
 
 const codeString = `
 import React, { useEffect, useMemo, useState, useCallback } from "react";
+import ChallengeUsersHardUICode from "./ChallengerUserHardUICode";
 
 /**
  * ES: HARD (realista 40m) — Lista con:
@@ -42,6 +43,7 @@ export default function UsersListHard() {
   // EN: Initial load (once). I use async/await for readability and clear error handling.
   useEffect(() => {
     fetchUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ES: Encapsulo el fetch en una función para poder “Retry” sin duplicar código.
@@ -63,11 +65,13 @@ export default function UsersListHard() {
 
   /** ------------------ DERIVED DATA ------------------ **/
   // ES: 1) Filtrado derivado
-  //    - No lo guardo en estado para evitar doble fuente de verdad (siempre deriva de users + search).
+  //    - \`useMemo\` evita recalcular en cada render. Solo se ejecuta si \`users\` o \`search\` cambian.
+  //    - No se guarda en estado para evitar duplicar la fuente de verdad.
   //    - Filtro por name/email/username en minúsculas para comparación case-insensitive.
   // EN: 1) Derived filtering
-  //    - I don’t store it in state to avoid double source of truth (it derives from users + search).
-  //    - Filter by name/email/username using lowercase for case-insensitive comparison.
+  //    - \`useMemo\` avoids recalculating on every render. It only runs if \`users\` or \`search\` change.
+  //    - Not stored in state to avoid duplicating the source of truth.
+  //    - Filter by name/email/username using lowercase for a case-insensitive comparison.
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return users;
@@ -80,13 +84,14 @@ export default function UsersListHard() {
   }, [users, search]);
 
   // ES: 2) Orden derivado
-  //    - Copio el array antes de sort para NO mutar el original (inmutabilidad).
+  //    - \`useMemo\` se ejecuta solo si la lista filtrada o el criterio de orden cambian.
+  //    - Copio el array (\`[...filtered]\`) antes de \`sort()\` para NO mutar el original (principio de inmutabilidad).
   //    - Comparo de forma case-insensitive (paso a minúsculas).
   //    - Complejidad típica O(n log n), adecuada para esta lista pequeña.
   //
   // EN: 2) Derived sorting
-  //    - Copy before sorting to avoid mutating the original (immutability).
-  //    - Case-insensitive comparison (lowercase both sides).
+  //    - \`useMemo\` runs only if the filtered list or the sort criteria change.
+  //    - Copy the array (\`[...filtered]\`) before \`sort()\` to AVOID mutating the original (immutability principle).
   //    - Typical complexity O(n log n), fine for this small list.
   const sorted = useMemo(() => {
     const copy = [...filtered];
@@ -141,8 +146,10 @@ export default function UsersListHard() {
    */
 
   /** ------------------ HANDLERS ------------------ **/
-  // ES: "useCallback" estabiliza la referencia (evita recreaciones inútiles si memorizamos hijos).
-  // EN: "useCallback" stabilizes the reference (prevents useless recreations if we memo children).
+  // ES: \`useCallback\` con \`[]\` estabiliza la referencia de la función. \`setSearch\` es estable por defecto.
+  //     Esto es una optimización útil si este handler se pasara a un componente hijo memorizado.
+  // EN: \`useCallback\` with \`[]\` stabilizes the function reference. \`setSearch\` is stable by default.
+  //     This is a useful optimization if this handler were passed to a memoized child component.
   const onSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(e.target.value);
@@ -150,8 +157,8 @@ export default function UsersListHard() {
     []
   );
 
-  // ES: Mismo header -> invierto dirección; header distinto -> arranco asc.
-  // EN: Same header -> flip direction; different header -> start asc.
+  // ES: Lógica de orden: si es la misma columna, invierte la dirección. Si es una nueva, la pone ascendente.
+  // EN: Sorting logic: if it's the same column, flip the direction. If it's a new one, set it to ascending.
   const toggleSort = useCallback((key: SortKey) => {
     setSort((prev) =>
       prev.key === key
@@ -162,76 +169,79 @@ export default function UsersListHard() {
 
   /** ------------------ RENDER ------------------ **/
   return (
-    <div style={{ maxWidth: 800, margin: "2rem auto", fontFamily: "sans-serif" }}>
-      <h2>Users (Hard – realistic)</h2>
+    <>
+      <div style={{ maxWidth: 800, margin: "2rem auto", fontFamily: "sans-serif" }} role="main">
+        <h2>Users (Hard – realistic)</h2>
 
-      {/* ES: Barra de controles: búsqueda + clear.
+        {/* ES: Barra de controles: búsqueda + clear.
           EN: Controls bar: search + clear. */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <input
-          placeholder="Search by name, email or username..."
-          value={search}
-          onChange={onSearchChange}
-          style={{ flex: 1 }}
-        />
-        <button onClick={() => setSearch("")} disabled={!search}>
-          Clear
-        </button>
-      </div>
-
-      {/* ES: Estados de red con feedback claro.
-          EN: Clear network feedback. */}
-      {loading && <p>Loading...</p>}
-      {err && (
-        <div>
-          <p style={{ color: "crimson" }}>Error: {err}</p>
-          <button onClick={fetchUsers}>Retry</button>
+        <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+          <input
+            placeholder="Search by name, email or username..."
+            value={search}
+            aria-label="Search users"
+            onChange={onSearchChange}
+            style={{ flex: 1 }} />
+          <button onClick={() => setSearch("")} disabled={!search}>
+            Clear
+          </button>
         </div>
-      )}
 
-      {!loading && !err && (
-        <>
-          {/* ES: Indicador de resultados para validar filtros/sort.
-              EN: Results indicator to validate filters/sort. */}
-          <p style={{ opacity: 0.7, marginTop: 0 }}>
-            Results: <b>{sorted.length}</b>
-          </p>
+        {/* ES: Estados de red con feedback claro.
+          EN: Clear network feedback. */}
+        {loading && <p>Loading...</p>}
+        {err && (
+          <div>
+            <p style={{ color: "crimson" }}>Error: {err}</p>
+            <button onClick={fetchUsers}>Retry</button>
+          </div>
+        )}
 
-          <table width="100%" cellPadding={8} style={{ borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                {/* ES: Cabeceras clickeables con aria-sort para accesibilidad.
-                    EN: Clickable headers with aria-sort for accessibility. */}
-                <Th label="name"     sort={sort} onToggle={toggleSort} />
-                <Th label="email"    sort={sort} onToggle={toggleSort} />
-                <Th label="username" sort={sort} onToggle={toggleSort} />
-                <th>city</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sorted.map((u) => (
-                <tr key={u.id} style={{ borderTop: "1px solid #eee" }}>
-                  <td>{u.name}</td>
-                  <td>{u.email}</td>
-                  <td>{u.username}</td>
-                  {/* ES: Optional chaining evita romper si falta address/city.
-                      EN: Optional chaining prevents breakage if address/city is missing. */}
-                  <td>{u.address?.city ?? "-"}</td>
-                </tr>
-              ))}
-              {sorted.length === 0 && (
+        {!loading && !err && (
+          <>
+            {/* ES: Indicador de resultados para dar feedback inmediato al usuario.
+                  EN: Results indicator to validate filters/sort. */}
+            <p style={{ opacity: 0.7, marginTop: 0 }}>
+              Results: <b>{sorted.length}</b>
+            </p>
+
+            <table width="100%" cellPadding={8} style={{ borderCollapse: "collapse" }}>
+              <thead>
                 <tr>
-                  <td colSpan={4} style={{ textAlign: "center", padding: 16 }}>
-                    No results
-                  </td>
+                  {/* ES: Subcomponente para las cabeceras, promoviendo la reutilización y limpieza.
+                      Pasa el estado de orden y el handler para el toggle.
+                      EN: Subcomponent for headers, promoting reuse and cleanliness.
+                      Passes the sort state and the toggle handler. */}
+                  <Th label="name" sort={sort} onToggle={toggleSort} />
+                  <Th label="email" sort={sort} onToggle={toggleSort} />
+                  <Th label="username" sort={sort} onToggle={toggleSort} />
+                  <th>city</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </>
-      )}
+              </thead>
+              <tbody>
+                {sorted.map((u) => (
+                  <tr key={u.id} style={{ borderTop: "1px solid #eee" }}>
+                    <td>{u.name}</td>
+                    <td>{u.email}</td>
+                    <td>{u.username}</td>
+                    {/* ES: Optional chaining (\`?\`) y Nullish Coalescing (\`??\`) para manejar datos opcionales de forma segura.
+                          EN: Optional chaining prevents breakage if address/city is missing. */}
+                    <td>{u.address?.city ?? "-"}</td>
+                  </tr>
+                ))}
+                {sorted.length === 0 && (
+                  <tr>
+                    <td colSpan={4} style={{ textAlign: "center", padding: 16 }}>
+                      No results
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </>
+        )}
 
-      {/**
+        {/**
        * ES — Talking points (para decir en voz alta):
        * - Datos derivados fuera del estado (filtered/sorted) → una sola fuente de verdad.
        * - Copio antes de ordenar (inmutabilidad) y comparo en minúsculas (case-insensitive).
@@ -246,11 +256,14 @@ export default function UsersListHard() {
        * - useCallback: avoid handler recreation, useful with memoized children or deep props.
        * - Alternatives: localeCompare for i18n; numeric compare for numeric columns.
        */}
-    </div>
+      </div>
+      <ChallengeUsersHardUICode />
+    </>
   );
 }
 
-/** ------------------ Subcomponent: Table Header ------------------ **/
+/** ES: Subcomponente para la cabecera de la tabla. Aislado y reutilizable.
+ *  EN: Subcomponent for the table header. Isolated and reusable. **/
 function Th({
   label,
   sort,
@@ -261,8 +274,8 @@ function Th({
   onToggle: (key: SortKey) => void;
 }) {
   const active = sort.key === label;
-  // ES: aria-sort comunica el estado a lectores de pantalla (accesibilidad).
-  // EN: aria-sort announces sorting state to screen readers (accessibility).
+  // ES: \`aria-sort\` es crucial para la accesibilidad. Informa a los lectores de pantalla cómo está ordenada la columna.
+  // EN: \`aria-sort\` is crucial for accessibility. It informs screen readers how the column is sorted.
   const ariaSort = active ? (sort.dir === "asc" ? "ascending" : "descending") : "none";
   return (
     <th
@@ -277,7 +290,8 @@ function Th({
   );
 }
 
-/** ------------------ Types ------------------ **/
+/** ES: Tipos para seguridad y autocompletado. \`SortKey\` previene errores de tipeo en las claves de orden.
+ *  EN: Types for safety and autocomplete. \`SortKey\` prevents typos in sort keys. **/
 type SortKey = "name" | "email" | "username";
 
 interface User {
