@@ -73,6 +73,7 @@ export default function ChallengeStopwatchLow() {
         {/* ES: Buenas prácticas a mencionar: estado mínimo, limpieza de intervalo en useEffect.
         EN: Good practices to mention: minimal state, effect cleanup for interval. */}
       </section>
+
       <ChallengeStopwatchLowUICode />
     </>
   );
