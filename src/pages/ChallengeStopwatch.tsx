@@ -1,5 +1,7 @@
-import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import ChallengeStopwatchLow from '../components/low/stopwatch/ChallengeStopwatchLow';
+import ChallengeStopwatchMid from '../components/mid/stopwatch/ChallengeStopwatchMid';
+import ChallengeStopwatchHard from '../components/hard/stopwatch/ChallengeStopwatchHard';
 
 export default function ChallengeStopwatch() {
   return (
@@ -14,9 +16,9 @@ export default function ChallengeStopwatch() {
 
       <Routes>
         <Route index element={<Navigate to="low" replace />} />
-        <Route path="low" element={<p>Stopwatch – LOW (mock)</p>} />
-        <Route path="mid" element={<p>Stopwatch – MID (mock)</p>} />
-        <Route path="hard" element={<p>Stopwatch – HARD (mock)</p>} />
+        <Route path="low" element={<ChallengeStopwatchLow />} />
+        <Route path="mid" element={<ChallengeStopwatchMid />} />
+        <Route path="hard" element={<ChallengeStopwatchHard />} />
         <Route path="*" element={<p>Not Found</p>} />
       </Routes>
     </section>

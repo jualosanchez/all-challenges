@@ -1,5 +1,8 @@
 import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import ChallengeToDoLow from '../components/low/todo/ChallengeToDoLow';
+import ChallengeToDoMid from '../components/mid/todo/ChallengeToDoMid';
+import ChallengeToDoHard from '../components/hard/todo/ChallengeToDoHard';
 
 export default function ChallengeTodo() {
   return (
@@ -16,9 +19,9 @@ export default function ChallengeTodo() {
       {/* Rutas anidadas */}
       <Routes>
         <Route index element={<Navigate to="low" replace />} />
-        <Route path="low" element={<p>ToDo – LOW (mock)</p>} />
-        <Route path="mid" element={<p>ToDo – MID (mock)</p>} />
-        <Route path="hard" element={<p>ToDo – HARD (mock)</p>} />
+        <Route path="low" element={<ChallengeToDoLow />} />
+        <Route path="mid" element={<ChallengeToDoMid />} />
+        <Route path="hard" element={<ChallengeToDoHard />} />
         <Route path="*" element={<p>Not Found</p>} />
       </Routes>
     </section>

@@ -1,6 +1,7 @@
-import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeUsersLow from '../components/low/ChallengeUsersLow';
+import ChallengeUsersLow from '../components/low/users/ChallengeUsersLow';
+import ChallengeUsersMid from '../components/mid/users/ChallengeUsersMid';
+import ChallengeUsersHard from '../components/hard/users/ChallengeUsersHard';
 
 export default function ChallengeUsers() {
   return (
@@ -16,8 +17,8 @@ export default function ChallengeUsers() {
       <Routes>
         <Route index element={<Navigate to="low" replace />} />
         <Route path="low" element={<ChallengeUsersLow />} />
-        <Route path="mid" element={<p>Users – MID (mock)</p>} />
-        <Route path="hard" element={<p>Users – HARD (mock)</p>} />
+        <Route path="mid" element={<ChallengeUsersMid />} />
+        <Route path="hard" element={<ChallengeUsersHard />} />
         <Route path="*" element={<p>Not Found</p>} />
       </Routes>
     </section>

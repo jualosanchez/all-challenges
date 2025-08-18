@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ChallengeUsersLowUICode from "./ChallengerUserLowUICode";
 
 /**
  * ES: Nivel BAJO — Lista de usuarios con búsqueda (fetch + filtro en memoria).
@@ -10,7 +11,7 @@ import React, { useState, useEffect } from "react";
  * EN: Show the minimal skeleton of a component with state, initial-load effect,
  *     and filtered list rendering. We prioritize clarity over optimization.
  */
-export default function UsersListBasic() {
+export default function ChallengeUsersLow() {
   /**
    * ES: Estado del componente
    * - `users`: fuente de verdad de la data (llega del fetch). Arreglo tipado de User.
@@ -72,58 +73,61 @@ export default function UsersListBasic() {
   );
 
   return (
-    <div style={{ padding: "1rem", fontFamily: "sans-serif" }}>
-      <h1>User List</h1>
+    <>
+      <div style={{ padding: "1rem", fontFamily: "sans-serif" }}>
+        <h1>User List</h1>
 
-      {/**
-       * ES: Input controlado
-       * - `value={search}` + `onChange` => React controla el valor (fácil de validar y testear).
-       * - Patrón estándar para formularios en React.
-       *
-       * EN: Controlled input
-       * - `value={search}` + `onChange` => React controls the value (easy to validate and test).
-       * - Standard pattern for forms in React.
-       */}
-      <input
-        type="text"
-        placeholder="Search user..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)} // ES: Actualiza estado => re-render con filtro aplicado.
-                                                    // EN: Update state => re-render with filter applied.
-      />
+        {/**
+         * ES: Input controlado
+         * - `value={search}` + `onChange` => React controla el valor (fácil de validar y testear).
+         * - Patrón estándar para formularios en React.
+         *
+         * EN: Controlled input
+         * - `value={search}` + `onChange` => React controls the value (easy to validate and test).
+         * - Standard pattern for forms in React.
+         */}
+        <input
+          type="text"
+          placeholder="Search user..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)} // ES: Actualiza estado => re-render con filtro aplicado.
+                                                      // EN: Update state => re-render with filter applied.
+        />
 
-      {/**
-       * ES: Lista declarativa
-       * - Usamos `.map` y una key estable (`u.id`) para ayudar a React a reconciliar.
-       * - Si no hay resultados mostramos un “empty state” para UX clara.
-       *
-       * EN: Declarative list
-       * - We use `.map` with a stable key (`u.id`) to help React reconcile updates.
-       * - If no results, we show an “empty state” for clear UX.
-       */}
-      <ul>
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map((u) => <li key={u.id}>{u.name}</li>)
-        ) : (
-          <li>No users found</li>
-        )}
-      </ul>
+        {/**
+         * ES: Lista declarativa
+         * - Usamos `.map` y una key estable (`u.id`) para ayudar a React a reconciliar.
+         * - Si no hay resultados mostramos un “empty state” para UX clara.
+         *
+         * EN: Declarative list
+         * - We use `.map` with a stable key (`u.id`) to help React reconcile updates.
+         * - If no results, we show an “empty state” for clear UX.
+         */}
+        <ul>
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((u) => <li key={u.id}>{u.name}</li>)
+          ) : (
+            <li>No users found</li>
+          )}
+        </ul>
 
-      {/**
-       * Mejores prácticas (para mencionar en voz alta) / Best practices (say aloud)
-       * ES:
-       * - Mantener “dato derivado” (filteredUsers) fuera del estado evita duplicidad.
-       * - Efecto de carga con [] evita múltiples fetch.
-       * - Input controlado simplifica validaciones y tests.
-       * - Tipado de `User` previene errores de propiedades.
-       *
-       * EN:
-       * - Keep “derived data” (filteredUsers) out of state to avoid duplication.
-       * - Load effect with [] avoids multiple fetches.
-       * - Controlled input simplifies validations and tests.
-       * - `User` typing prevents property mistakes.
-       */}
-    </div>
+        {/**
+         * Mejores prácticas (para mencionar en voz alta) / Best practices (say aloud)
+         * ES:
+         * - Mantener “dato derivado” (filteredUsers) fuera del estado evita duplicidad.
+         * - Efecto de carga con [] evita múltiples fetch.
+         * - Input controlado simplifica validaciones y tests.
+         * - Tipado de `User` previene errores de propiedades.
+         *
+         * EN:
+         * - Keep “derived data” (filteredUsers) out of state to avoid duplication.
+         * - Load effect with [] avoids multiple fetches.
+         * - Controlled input simplifies validations and tests.
+         * - `User` typing prevents property mistakes.
+         */}
+      </div>
+      <ChallengeUsersLowUICode />
+    </>
   );
 }
 
