@@ -14,7 +14,7 @@ export default function ChallengeTodo() {
         <Link to="low">Low</Link>
         <Link to="mid">Mid</Link>
         <Link to="hard">Hard</Link>
-        <Link to="redux">redux</Link>
+        <Link to="redux">Redux Toolkit</Link>
       </nav>
 
       {/* Rutas anidadas */}
