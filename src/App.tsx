@@ -17,9 +17,9 @@ import ChallengeUsers from './pages/ChallengeUsers';
 import Home from './pages/Home';
 
 const challenges = [
-  { name: 'ToDo', path: '/challenge/todo/low' },
-  { name: 'Stopwatch', path: '/challenge/stopwatch/low' },
-  { name: 'Users', path: '/challenge/users/low' },
+  { name: 'ToDo', path: '/todo/low' },
+  { name: 'Stopwatch', path: '/stopwatch/low' },
+  { name: 'Users', path: '/users/low' },
 ];
 
 export default function App() {
@@ -66,7 +66,7 @@ export default function App() {
               }}
             >
               {challenges.map((challenge) => {
-                const challengeBasePath = `/challenge/${challenge.name.toLowerCase()}`;
+                const challengeBasePath = `/${challenge.name.toLowerCase()}`;
                 const isSelected = location.pathname.startsWith(challengeBasePath);
                 return (
                   <MenuItem
@@ -89,12 +89,9 @@ export default function App() {
       <Container component="main" sx={{ mt: 4, mb: 4 }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/challenge/todo/*" element={<ChallengeTodo />} />
-          <Route
-            path="/challenge/stopwatch/*"
-            element={<ChallengeStopwatch />}
-          />
-          <Route path="/challenge/users/*" element={<ChallengeUsers />} />
+          <Route path="/todo/*" element={<ChallengeTodo />} />
+          <Route path="/stopwatch/*" element={<ChallengeStopwatch />} />
+          <Route path="/users/*" element={<ChallengeUsers />} />
           <Route path="*" element={<p>Not Found</p>} />
         </Routes>
       </Container>
