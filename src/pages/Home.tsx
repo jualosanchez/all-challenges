@@ -14,58 +14,58 @@ const questions = [
   {
     id: 'react-core',
     category: 'React Core & Hooks',
-    category_es: 'Fundamentos de React y Hooks',
+    category_es: 'Fundamentos de React y Hooks (React, state and props, Virtual DOM, hooks, Hoc, class components, SSR, communication)',
     qa: [
       {
-        q: 'What is JSX and why do we use it in React?',
+        q: 'What is JSX and why do we use it in <b>React</b>?',
         q_es: '¿Qué es JSX y por qué se utiliza en React?',
         a: `<p><b>EN:</b> JSX looks like HTML, but it is inside a JavaScript file. It's a special syntax that lets us write what our components look like in a very clear way. A tool called Babel changes this "HTML-like" code into real React code (<code>React.createElement</code> functions). We use it because it's easier to read and write the UI of our components.</p>`,
         a_es: `<p><b>ES:</b> JSX (JavaScript XML) es una extensión de sintaxis para JavaScript que permite escribir código similar a HTML dentro de un archivo JavaScript. No es HTML ni JavaScript puro, sino una combinación que se transpila (convierte) a llamadas de funciones <code>React.createElement()</code> mediante herramientas como Babel. Su principal ventaja es que hace que la creación de la UI sea más declarativa, visual e intuitiva, asemejándose a la estructura final del DOM.</p>`,
       },
       {
-        q: 'What is the difference between state and props?',
+        q: 'What is the difference between <b>state and props</b>?',
         q_es: '¿Cuál es la diferencia entre state y props en React?',
         a: `<p><b>EN:</b> <b>Props</b> are like settings that a parent component gives to a child component. The child component cannot change its props; it can only read them. <b>State</b> is data that a component manages for itself, inside the component. The component can change its own state. When the state changes, the component re-renders to show the new information. So, props come from the outside, and state is managed on the inside.</p>`,
         a_es: `<p><b>ES:</b> <b>Props</b> (propiedades) son datos que un componente padre pasa a sus componentes hijos. Son inmutables (solo lectura) para el componente hijo. Sirven para configurar y comunicar datos hacia abajo en el árbol de componentes. <b>State</b> (estado) es un conjunto de datos que un componente gestiona internamente. Es mutable (puede cambiar) a través de la función <code>setState</code>. Cuando el estado cambia, React vuelve a renderizar el componente para reflejar los nuevos datos. En resumen: props son para pasar datos desde fuera, state es para gestionar datos internos del componente.</p>`,
       },
       {
         q: 'What is the Virtual DOM and how does it make React fast?',
-        q_es: '¿Qué es el Virtual DOM y cómo mejora el rendimiento de React?',
+        q_es: '¿Qué es el <b>Virtual DOM</b> y cómo mejora el rendimiento de React?',
         a: `<p><b>EN:</b> The Virtual DOM is a copy of the real DOM that React keeps in memory. When we change the state of a component, React first updates this copy. Then, it compares the new copy with the old copy to see what exactly changed. This process is called "diffing". Finally, React only updates the parts of the real DOM that actually changed. This is much faster than re-creating the entire real DOM every time.</p>`,
         a_es: `<p><b>ES:</b> El Virtual DOM es una copia en memoria de la estructura del DOM real. Cuando el estado de un componente cambia, React no modifica el DOM del navegador directamente. En su lugar, crea un nuevo Virtual DOM y lo compara con la versión anterior (un proceso llamado "diffing" o reconciliación). Luego, calcula la forma más eficiente de aplicar solo los cambios necesarios en el DOM real. Esto minimiza las costosas manipulaciones directas del DOM, mejorando significativamente el rendimiento.</p>`,
       },
       {
-        q: 'What are hooks in React? Name some examples.',
+        q: 'What are <b>hooks</b> in React? Name some examples.',
         q_es: '¿Qué son los hooks en React? Nombra algunos ejemplos.',
         a: `<p><b>EN:</b> Hooks are special functions that let you "hook into" React features from functional components. For example, you can use state or other React features without writing a class. Some common hooks are: <code>useState</code> (to add state), <code>useEffect</code> (to run side effects, like fetching data), and <code>useContext</code> (to use context).</p>`,
         a_es: `<p><b>ES:</b> Los hooks son funciones especiales que permiten a los componentes funcionales "engancharse" a características de React, como el estado y el ciclo de vida, que antes solo estaban disponibles en componentes de clase. Ejemplos comunes: <code>useState</code> (para añadir estado local), <code>useEffect</code> (para manejar efectos secundarios como llamadas a API o suscripciones), <code>useContext</code> (para consumir un contexto), <code>useReducer</code>, <code>useCallback</code>, <code>useMemo</code>, <code>useRef</code>.</p>`,
       },
       {
-        q: 'What are custom hooks for?',
+        q: 'What are <b>custom hooks</b> for?',
         q_es: '¿Para qué sirven los hooks personalizados?',
         a: `<p><b>EN:</b> A custom hook is a JavaScript function whose name starts with "use". It lets you extract component logic into a reusable function. For example, if you have logic for fetching data in many components, you can create a <code>useFetch</code> hook. This helps to keep your components clean and to reuse logic easily.</p>`,
         a_es: `<p><b>ES:</b> Un hook personalizado es una función de JavaScript cuyo nombre empieza con "use" y que puede llamar a otros hooks. Sirven para extraer y reutilizar lógica con estado (stateful logic) entre diferentes componentes. Por ejemplo, podrías crear un hook <code>useFetch(url)</code> que maneje la lógica de una llamada a una API (estados de carga, error y datos). Esto ayuda a mantener los componentes más limpios, simples y a evitar la duplicación de código.</p>`,
       },
       {
-        q: 'What is a Higher Order Component (HOC)?',
+        q: 'What is a Higher Order Component <b>(HOC)</b>?',
         q_es: '¿Qué es un Higher Order Component (HOC)?',
         a: `<p><b>EN:</b> A Higher-Order Component (HOC) is a function that takes a component and returns a new component with extra props or logic. It's an older pattern in React for reusing component logic. For example, a HOC could add user data as a prop to any component you give it. Custom hooks are now the more common way to do this.</p>`,
         a_es: `<p><b>ES:</b> Un Higher-Order Component (HOC) es un patrón avanzado en React. Es una función que recibe un componente como argumento y devuelve un nuevo componente mejorado. El HOC "envuelve" al componente original para añadirle props adicionales, lógica o comportamiento. Por ejemplo, un HOC <code>withAuth</code> podría verificar si el usuario está autenticado y, solo si lo está, renderizar el componente envuelto. Aunque potentes, los hooks personalizados son a menudo una alternativa más simple y moderna.</p>`,
       },
       {
-        q: 'What is the difference between class components and functional components?',
+        q: 'What is the difference between <b>class components</b> and functional components?',
         q_es: '¿Qué diferencia hay entre componentes de clase y componentes funcionales?',
         a: `<p><b>EN:</b> <b>Class components</b> use ES6 classes and have a <code>render</code> method. They use lifecycle methods like <code>componentDidMount</code> to handle side effects. <b>Functional components</b> are simpler JavaScript functions. Before hooks, they were just for showing UI (stateless). Now, with hooks like <code>useState</code> and <code>useEffect</code>, they can do everything class components can do. Today, functional components with hooks are the recommended way to write React components.</p>`,
         a_es: `<p><b>ES:</b> <b>Componentes de Clase:</b> Usan la sintaxis de clases de ES6, extienden de <code>React.Component</code> y usan un método <code>render()</code> para devolver JSX. El estado se maneja con <code>this.state</code> y el ciclo de vida con métodos como <code>componentDidMount</code> o <code>componentDidUpdate</code>. <b>Componentes Funcionales:</b> Son funciones de JavaScript que reciben props y devuelven JSX. Antes eran "sin estado", pero con la introducción de los hooks (<code>useState</code>, <code>useEffect</code>, etc.), ahora pueden manejar estado, ciclo de vida y otras características de React. Hoy en día, los componentes funcionales con hooks son el estándar recomendado por su simplicidad y legibilidad.</p>`,
       },
       {
-        q: 'What is Server Side Rendering (SSR)? How is it used with React?',
+        q: 'What is Server Side Rendering (<b>SSR</b>)? How is it used with React?',
         q_es: '¿Qué es el Server Side Rendering (SSR)? ¿Cómo se usa con React?',
         a: `<p><b>EN:</b> Server-Side Rendering (SSR) means that the server sends a fully rendered HTML page to the browser. The user sees the content immediately. After the page loads, React (JavaScript) takes over, and the page becomes interactive. This is good for SEO (search engines can read the content) and for a faster first-page load. Frameworks like Next.js make SSR easier with React.</p>`,
         a_es: `<p><b>ES:</b> Server-Side Rendering (SSR) es el proceso de renderizar una página de React en el servidor en lugar de en el navegador del cliente. Cuando un usuario solicita una página, el servidor genera el HTML completo y lo envía al navegador. El usuario ve el contenido inmediatamente. Luego, el JavaScript de React se carga en segundo plano y "hidrata" la página, haciéndola interactiva. Se usa para mejorar el rendimiento de la carga inicial (First Contentful Paint) y el SEO, ya que los motores de búsqueda pueden indexar el contenido HTML directamente. Se implementa con frameworks como Next.js o manualmente con un servidor Node.js.</p>`,
       },
       {
-        q: 'How do you handle communication between components (parent-child, child-parent, sibling)?',
+        q: 'How do you handle <b>communication</b> between components (parent-child, child-parent, sibling)?',
         q_es: '¿Cómo se maneja la comunicación entre componentes (parent-child, child-parent, sibling)?',
         a: `<p><b>EN:</b><ul><li><b>Parent to Child:</b> The parent passes data to the child using <b>props</b>.</li><li><b>Child to Parent:</b> The parent passes a <b>callback function</b> as a prop to the child. The child calls this function to send data back up to the parent.</li><li><b>Between Siblings (brothers):</b> You "lift state up". You move the shared state to their closest common parent. The parent then passes the state down to both siblings as props. For more complex cases, you can use <b>Context API</b> or a state management library like Redux or Zustand.</li></ul></p>`,
         a_es: `<p><b>ES:</b><ul><li><b>Padre a Hijo (Parent-to-Child):</b> Se usa <b>props</b>. El componente padre pasa datos al hijo a través de sus atributos.</li><li><b>Hijo a Padre (Child-to-Parent):</b> Se usan <b>funciones de callback</b>. El padre define una función y la pasa como prop al hijo. El hijo ejecuta esa función cuando necesita comunicar algo al padre, pasándole datos como argumentos.</li><li><b>Entre Hermanos (Sibling-to-Sibling):</b> Se usa el patrón <b>"levantar el estado" (lifting state up)</b>. El estado compartido se mueve al ancestro común más cercano. Este padre luego pasa el estado y las funciones para modificarlo a ambos hijos a través de props. Para casos más complejos, se puede usar la <b>Context API</b> o una librería de gestión de estado global (Redux, Zustand).</li></ul></p>`,
@@ -74,17 +74,17 @@ const questions = [
   },
   {
     id: 'performance-optimization',
-    category: 'Optimization & Performance',
+    category: 'Optimization & Performance (useMemo, useCallback, React.memo, React 18/19, avoid re-renders)',
     category_es: 'Optimización y Rendimiento',
     qa: [
       {
-        q: 'What is useMemo and when would you use it?',
+        q: 'What is <b>useMemo</b> and when would you use it?',
         q_es: '¿Qué es useMemo y cuándo lo usarías?',
         a: `<p><b>EN:</b> <code>useMemo</code> is a hook that saves the <b>result</b> of a slow calculation. It only runs the calculation again if one of its inputs (dependencies) changes. You use it when you have a calculation that takes a long time, so your component doesn't get slow on every re-render.</p>`,
         a_es: `<p><b>ES:</b> <code>useMemo</code> es un hook que memoriza (cachea) el <b>valor de retorno</b> de una función. Solo vuelve a ejecutar la función si una de sus dependencias ha cambiado. Lo usarías para evitar cálculos costosos en cada renderizado, como filtrar o transformar un array grande, que de otro modo ralentizarían el componente.</p>`,
       },
       {
-        q: 'What is useCallback and when would you use it?',
+        q: 'What is <b>useCallback</b> and when would you use it?',
         q_es: '¿Qué es useCallback y cuándo lo usarías?',
         a: `<p><b>EN:</b> <code>useCallback</code> is a hook that saves a <b>function itself</b>, not its result. It gives you back the exact same function on every re-render, unless its inputs (dependencies) change. You use it when you pass a function as a prop to a child component that is optimized with <code>React.memo</code>. This helps the child component to not re-render when it doesn't need to.</p>`,
         a_es: `<p><b>ES:</b> <code>useCallback</code> es un hook que memoriza la <b>instancia de una función</b>. Devuelve la misma referencia de la función entre renderizados, a menos que una de sus dependencias cambie. Lo usarías principalmente para pasar funciones como props a componentes hijos optimizados (con <code>React.memo</code>), evitando que se vuelvan a renderizar innecesariamente solo porque la función prop es una nueva instancia en cada render del padre.</p>`,
@@ -96,19 +96,19 @@ const questions = [
         a_es: `<p><b>ES:</b> La principal diferencia es lo que memorizan. <code>useMemo</code> memoriza un <b>valor</b> (el resultado de ejecutar la función). <code>useCallback</code> memoriza la <b>función</b> en sí. En resumen: <code>useCallback(fn, deps)</code> es un atajo para <code>useMemo(() => fn, deps)</code>.</p>`,
       },
       {
-        q: 'What is React.memo? When should you use it?',
+        q: 'What is <b>React.memo</b>? When should you use it?',
         q_es: '¿Qué es React.memo? ¿Cuándo conviene usarlo?',
         a: `<p><b>EN:</b> <code>React.memo</code> is a tool that you can wrap around your component. It tells React: "Do not re-render this component if its props are the same as last time." You should use it on components that re-render often with the same props, or on components that are very slow to render. It helps to make your app faster.</p>`,
         a_es: `<p><b>ES:</b> <code>React.memo</code> es un Higher-Order Component (HOC) que envuelve un componente y evita que se vuelva a renderizar si sus <b>props no han cambiado</b> (hace una comparación superficial o "shallow comparison"). Es una optimización de rendimiento. Conviene usarlo en componentes que se renderizan a menudo con las mismas props, o que tienen un coste de renderizado alto. Funciona muy bien en combinación con <code>useCallback</code> para las props de tipo función.</p>`,
       },
       {
-        q: 'Does React 18/19 still recommend using memoization hooks manually, or does it do it alone?',
+        q: 'Does <b>React 18/19 still recommend using memoization</b> hooks manually, or does it do it alone?',
         q_es: '¿React 18/19 sigue recomendando el uso de hooks de memorización manualmente o lo hace solo?',
         a: `<p><b>EN:</b> In React 18, you still need to use <code>useMemo</code> and <code>useCallback</code> yourself. But, the React team is building a new <b>React Compiler</b> (previously called "Forget"). In the future, this compiler will automatically add these optimizations for you. You will not need to write them by hand. This will probably be a big feature in React 19.</p>`,
         a_es: `<p><b>ES:</b> En React 18, todavía se recomienda usar <code>useMemo</code> y <code>useCallback</code> manualmente cuando sea necesario. Sin embargo, el equipo de React está trabajando en un <b>React Compiler</b> (antes llamado "Forget") que en el futuro hará estas optimizaciones de forma automática. Esto significa que el compilador analizará el código y aplicará la memorización sin que tengamos que escribir los hooks manualmente. Se espera que esto sea una característica clave a partir de React 19, simplificando mucho la optimización.</p>`,
       },
       {
-        q: 'How can you avoid unnecessary re-renders in a React component?',
+        q: 'How can you <b>avoid unnecessary re-renders</b> in a React component?',
         q_es: '¿Cómo puedes evitar renderizados innecesarios en un componente React?',
         a: `<p><b>EN:</b> There are a few ways:
           <ul>
@@ -440,10 +440,14 @@ export default function Home() {
                 aria-controls={`panel${index}-content`}
                 id={`panel${index}-header`}
               >
-                <Typography>
-                  <b>EN:</b> {item.q}
+                <Typography component="div">
+                  <span
+                    dangerouslySetInnerHTML={{ __html: `<b>EN:</b> ${item.q}` }}
+                  />
                   <br />
-                  <b>ES:</b> {item.q_es}
+                  <span
+                    dangerouslySetInnerHTML={{ __html: `<b>ES:</b> ${item.q_es}` }}
+                  />
                 </Typography>
               </AccordionSummary>
               <AccordionDetails>
