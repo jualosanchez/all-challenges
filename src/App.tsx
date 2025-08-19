@@ -15,11 +15,13 @@ import ChallengeTodo from './pages/ChallengeTodo';
 import ChallengeStopwatch from './pages/ChallengeStopwatch';
 import ChallengeUsers from './pages/ChallengeUsers';
 import Home from './pages/Home';
+import ChallengeCountry from './pages/ChallengeCountry';
 
 const challenges = [
   { name: 'ToDo', path: '/todo/low' },
   { name: 'Stopwatch', path: '/stopwatch/low' },
   { name: 'Users', path: '/users/low' },
+  { name: 'Country', path: '/country/mid' },
 ];
 
 export default function App() {
@@ -92,6 +94,7 @@ export default function App() {
           <Route path="/todo/*" element={<ChallengeTodo />} />
           <Route path="/stopwatch/*" element={<ChallengeStopwatch />} />
           <Route path="/users/*" element={<ChallengeUsers />} />
+          <Route path="/country/*" element={<ChallengeCountry />} />
           <Route path="*" element={<p>Not Found</p>} />
         </Routes>
       </Container>
