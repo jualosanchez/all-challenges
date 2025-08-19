@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import ChallengeCountryUICode from './ChallengeCountryUICode';
+import { useState } from "react";
+import ChallengeCountryUICode from "./ChallengeCountryUICode";
 
 // 1. Definimos las interfaces para los tipos de datos de la API
 interface Country {
@@ -13,25 +13,25 @@ interface Country {
   };
 }
 
-const API_URL = 'https://restcountries.com/v3.1/name/';
+const API_URL = "https://restcountries.com/v3.1/name/";
 
 function ChallengeCountryMid() {
   // 2. Usamos los tipos de datos en los hooks de estado
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>("");
   const [countryInfo, setCountryInfo] = useState<Country | null>(null);
   const [savedCountries, setSavedCountries] = useState<Country[]>([]);
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string>("");
 
   const handleSearch = async () => {
     if (!query.trim()) return;
-    
+
     setCountryInfo(null);
-    setError('');
+    setError("");
 
     try {
       const response = await fetch(`${API_URL}${query}`);
       if (!response.ok) {
-        throw new Error('País no encontrado.');
+        throw new Error("País no encontrado.");
       }
       const data: Country[] = await response.json();
       setCountryInfo(data[0]);
@@ -55,12 +55,12 @@ function ChallengeCountryMid() {
   };
 
   const handleClear = () => {
-    setQuery('');
+    setQuery("");
     setCountryInfo(null);
-    setError('');
+    setError("");
   };
 
-  const isInputEmpty = query.trim() === '';
+  const isInputEmpty = query.trim() === "";
 
   return (
     <>
@@ -72,10 +72,17 @@ function ChallengeCountryMid() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Escribe un país..." />
-          <button onClick={handleSearch} disabled={isInputEmpty}>Buscar</button>
-          <button onClick={handleSaveCountry} disabled={!countryInfo}>Guardar</button>
-          <button onClick={handleClear} disabled={isInputEmpty}>Limpiar</button>
+            placeholder="Escribe un país..."
+          />
+          <button onClick={handleSearch} disabled={isInputEmpty}>
+            Buscar
+          </button>
+          <button onClick={handleSaveCountry} disabled={!countryInfo}>
+            Guardar
+          </button>
+          <button onClick={handleClear} disabled={isInputEmpty}>
+            Limpiar
+          </button>
         </div>
 
         <div className="info-area">
@@ -84,9 +91,13 @@ function ChallengeCountryMid() {
           {countryInfo && (
             <div className="country-card">
               <h2>{countryInfo.name.common}</h2>
-              <p>Capital: {countryInfo.capital?.[0] || 'N/A'}</p>
+              <p>Capital: {countryInfo.capital?.[0] || "N/A"}</p>
               <p>Población: {countryInfo.population.toLocaleString()}</p>
-              <img src={countryInfo.flags.svg} alt={`Bandera de ${countryInfo.name.common}`} width="100" />
+              <img
+                src={countryInfo.flags.svg}
+                alt={`Bandera de ${countryInfo.name.common}`}
+                width="100"
+              />
             </div>
           )}
         </div>
@@ -98,9 +109,7 @@ function ChallengeCountryMid() {
           <ul>
             {savedCountries.map((country) => (
               // Es buena práctica usar una key única, como el nombre del país
-              <li key={country.name.common}>
-                {country.name.common}
-              </li>
+              <li key={country.name.common}>{country.name.common}</li>
             ))}
           </ul>
           {!savedCountries.length && <p>No hay países guardados.</p>}

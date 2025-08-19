@@ -1,0 +1,8 @@
+{
+  // Activa el formateo al guardar un archivo
+  "editor.formatOnSave": true,
+
+  // Establece Prettier como el formateador por defecto para todos los lenguajes
+  // Esto evita conflictos si tienes otros formateadores instalados.
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

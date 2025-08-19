@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import ChallengeToDoMidUICode from "./ChallengeToDoMidUICode";
+import { useEffect, useState } from 'react';
+import ChallengeToDoMidUICode from './ChallengeToDoMidUICode';
 
 /**
  * ES: Nivel MEDIO — +loading/error/retry, edición inline.
@@ -15,7 +15,7 @@ export default function ChallengeToDoMid() {
   const [todos, setTodos] = useState<Todo[]>([]);
   // ES: Estado para el input de texto. Almacenar su valor en el estado lo convierte en un "componente controlado".
   // EN: State for the text input. Storing its value in the state makes it a "controlled component".
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   // ES: Estados para manejar el ciclo de vida de la petición de red. Crucial para la UX.
   // EN: States to manage the network request lifecycle. Crucial for UX.
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ export default function ChallengeToDoMid() {
   // ES: Estados para la edición inline. 'editingId' rastrea QUÉ ítem se edita, y 'editingText' su valor temporal.
   // EN: States for inline editing. 'editingId' tracks WHICH item is being edited, and 'editingText' its temporary value.
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
+  const [editingText, setEditingText] = useState('');
 
   /**
    * ES: Efecto para cargar datos iniciales cuando el componente se monta.
@@ -35,15 +35,17 @@ export default function ChallengeToDoMid() {
     // ---------- A) JSONPlaceholder ----------
     setLoading(true);
     setErr(null);
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
       .then((r) => {
-        if (!r.ok) throw new Error("Network error");
+        if (!r.ok) throw new Error('Network error');
         return r.json();
       })
-      .then((data: Array<{ id: number; title: string; completed: boolean }>) => {
-        setTodos(data);
-      })
-      .catch((e) => setErr(e.message || "Unknown fetch error"))
+      .then(
+        (data: Array<{ id: number; title: string; completed: boolean }>) => {
+          setTodos(data);
+        }
+      )
+      .catch((e) => setErr(e.message || 'Unknown fetch error'))
       .finally(() => setLoading(false));
 
     // ---------- B) DummyJSON ----------
@@ -71,17 +73,20 @@ export default function ChallengeToDoMid() {
     // ES: Actualización inmutable: creamos un nuevo array y añadimos el nuevo ítem.
     // EN: Immutable update: we create a new array and add the new item.
     setTodos((p) => [...p, { id: Date.now(), title, completed: false }]);
-    setText("");
+    setText('');
   };
 
   // ES: Cambia el estado 'completed' de una tarea.
   // EN: Toggles the 'completed' state of a task.
   const toggle = (id: number) =>
-    setTodos((p) => p.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+    setTodos((p) =>
+      p.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
 
   // ES: Elimina una tarea de la lista.
   // EN: Removes a task from the list.
-  const removeOne = (id: number) => setTodos((p) => p.filter((t) => t.id !== id));
+  const removeOne = (id: number) =>
+    setTodos((p) => p.filter((t) => t.id !== id));
 
   // ES: Inicia el modo de edición para una tarea específica.
   // EN: Enters edit mode for a specific task.
@@ -107,7 +112,7 @@ export default function ChallengeToDoMid() {
   // EN: Exits edit mode and resets the related states.
   const cancelEdit = () => {
     setEditingId(null);
-    setEditingText("");
+    setEditingText('');
   };
 
   // ES: Lógica de reintento simple para la demo. En una app real, se llamaría a la función de fetch.
@@ -118,18 +123,25 @@ export default function ChallengeToDoMid() {
 
   return (
     <>
-      <section style={{ maxWidth: 560, margin: "1.5rem auto", fontFamily: "sans-serif" }}>
+      <section
+        style={{
+          maxWidth: 560,
+          margin: '1.5rem auto',
+          fontFamily: 'sans-serif',
+        }}
+      >
         <h2>ToDo (Mid)</h2>
 
         {/* ES: Formulario para agregar nuevas tareas.
             EN: Form to add new tasks. */}
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8 }}>
           <input
             placeholder="Add a task…"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && addTodo()}
-            style={{ flex: 1 }} />
+            onKeyDown={(e) => e.key === 'Enter' && addTodo()}
+            style={{ flex: 1 }}
+          />
           <button onClick={addTodo} disabled={!text.trim()}>
             Add
           </button>
@@ -139,7 +151,7 @@ export default function ChallengeToDoMid() {
             EN: Conditional rendering for loading and error states. */}
         {loading && <p>Loading…</p>}
         {err && (
-          <p style={{ color: "crimson" }}>
+          <p style={{ color: 'crimson' }}>
             Error: {err} <button onClick={retry}>Retry</button>
           </p>
         )}
@@ -147,22 +159,26 @@ export default function ChallengeToDoMid() {
         {/* ES: La lista solo se muestra si no hay carga ni errores.
             EN: The list is only shown if there is no loading and no errors. */}
         {!loading && !err && (
-          <ul style={{ listStyle: "none", padding: 0, marginTop: 12 }}>
+          <ul style={{ listStyle: 'none', padding: 0, marginTop: 12 }}>
             {todos.map((t) => (
               <li
                 key={t.id}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "auto 1fr auto auto",
-                  alignItems: "center",
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto auto',
+                  alignItems: 'center',
                   gap: 8,
-                  borderTop: "1px solid #eee",
-                  padding: "6px 0",
+                  borderTop: '1px solid #eee',
+                  padding: '6px 0',
                 }}
               >
                 {/* ES: El checkbox siempre es visible.
                     EN: The checkbox is always visible. */}
-                <input type="checkbox" checked={t.completed} onChange={() => toggle(t.id)} />
+                <input
+                  type="checkbox"
+                  checked={t.completed}
+                  onChange={() => toggle(t.id)}
+                />
 
                 {/* ES: Renderizado condicional: o mostramos el input de edición o el texto normal.
                     EN: Conditional rendering: we either show the edit input or the normal text. */}
@@ -174,7 +190,8 @@ export default function ChallengeToDoMid() {
                       autoFocus
                       value={editingText}
                       onChange={(e) => setEditingText(e.target.value)}
-                      onKeyDown={(e) => e.key === "Enter" && commitEdit()} />
+                      onKeyDown={(e) => e.key === 'Enter' && commitEdit()}
+                    />
                     {/* ES: Botones específicos para el modo de edición.
                         EN: Specific buttons for the edit mode. */}
                     <button onClick={commitEdit}>Save</button>
@@ -184,7 +201,11 @@ export default function ChallengeToDoMid() {
                   <>
                     {/* ES: El texto de la tarea, con estilo tachado si está completada.
                         EN: The task text, with a line-through style if completed. */}
-                    <span style={{ textDecoration: t.completed ? "line-through" : "none" }}>
+                    <span
+                      style={{
+                        textDecoration: t.completed ? 'line-through' : 'none',
+                      }}
+                    >
                       {t.title}
                     </span>
                     <button onClick={() => startEdit(t)}>Edit</button>

@@ -1,15 +1,6 @@
 import React from 'react';
 import { Routes, Route, Link as RouterLink, useLocation } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Box,
-  Button,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { AppBar, Toolbar, Typography, Container, Box, Button, Menu, MenuItem } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import ChallengeTodo from './pages/ChallengeTodo';
 import ChallengeStopwatch from './pages/ChallengeStopwatch';

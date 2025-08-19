@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   agregarTodo,
   toggleTodo,
   eliminarTodo,
   setTodos,
   editarTodo,
-} from "../../../redux/todoSlice";
-import { RootState, AppDispatch } from "../../../redux/store";
-import ToDoReduxUICode from "./ChallengeToDoReduxUICode";
+} from '../../../redux/todoSlice';
+import { RootState, AppDispatch } from '../../../redux/store';
+import ToDoReduxUICode from './ChallengeToDoReduxUICode';
 
 /**
  * ES: Nivel MEDIO — ToDo con Redux Toolkit: listar, agregar, completar, borrar, editar + estados de carga/error.
@@ -20,7 +20,7 @@ import ToDoReduxUICode from "./ChallengeToDoReduxUICode";
 export default function ToDoRedux() {
   // ES: Estado local solo para el campo de texto. Es un estado efímero que no necesita ser global.
   // EN: Local state for the text input only. It's an ephemeral state that doesn't need to be global.
-  const [texto, setTexto] = useState("");
+  const [texto, setTexto] = useState('');
   // ES: Estados locales para manejar el ciclo de vida de la petición de red.
   // EN: Local states to manage the network request lifecycle.
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ export default function ToDoRedux() {
   // ES: Estados locales para la edición inline. El estado de la UI no necesita estar en Redux.
   // EN: Local states for inline editing. UI state doesn't need to be in Redux.
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
+  const [editingText, setEditingText] = useState('');
 
   // ES: 'useSelector' extrae datos del store de Redux. Nos suscribimos al estado 'todos'.
   // EN: 'useSelector' extracts data from the Redux store. We subscribe to the 'todos' state.
@@ -45,27 +45,29 @@ export default function ToDoRedux() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
       .then((r) => {
-        if (!r.ok) throw new Error("Network error");
+        if (!r.ok) throw new Error('Network error');
         return r.json();
       })
-      .then((data: Array<{ id: number; title: string; completed: boolean }>) => {
-        // ES: Mapeamos los datos de la API para que coincidan con la estructura de nuestro estado en Redux.
-        // EN: We map the API data to match the structure of our state in Redux.
-        const mappedTodos = data.map((t) => ({
-          id: t.id,
-          texto: t.title, // 'title' de la API -> 'texto' en nuestro estado
-          completado: t.completed, // 'completed' de la API -> 'completado' en nuestro estado
-        }));
-        // ES: Despachamos la acción 'setTodos' para inicializar el estado en Redux.
-        // EN: We dispatch the 'setTodos' action to initialize the state in Redux.
-        dispatch(setTodos(mappedTodos));
-      })
-      .catch((e) => setError(e.message || "Unknown fetch error"))
+      .then(
+        (data: Array<{ id: number; title: string; completed: boolean }>) => {
+          // ES: Mapeamos los datos de la API para que coincidan con la estructura de nuestro estado en Redux.
+          // EN: We map the API data to match the structure of our state in Redux.
+          const mappedTodos = data.map((t) => ({
+            id: t.id,
+            texto: t.title, // 'title' de la API -> 'texto' en nuestro estado
+            completado: t.completed, // 'completed' de la API -> 'completado' en nuestro estado
+          }));
+          // ES: Despachamos la acción 'setTodos' para inicializar el estado en Redux.
+          // EN: We dispatch the 'setTodos' action to initialize the state in Redux.
+          dispatch(setTodos(mappedTodos));
+        }
+      )
+      .catch((e) => setError(e.message || 'Unknown fetch error'))
       .finally(() => setLoading(false));
   }, [dispatch]); // ES: dispatch se incluye como dependencia según las reglas de los hooks.
-                  // EN: dispatch is included as a dependency according to the rules of hooks.
+  // EN: dispatch is included as a dependency according to the rules of hooks.
 
   // ES: Despacha la acción para añadir una nueva tarea.
   // EN: Dispatches the action to add a new task.
@@ -75,7 +77,7 @@ export default function ToDoRedux() {
     // ES: Despachamos la acción 'agregarTodo' con el texto del input como payload.
     // EN: We dispatch the 'agregarTodo' action with the input text as payload.
     dispatch(agregarTodo(trimmedText));
-    setTexto("");
+    setTexto('');
   };
 
   // ES: Inicia el modo de edición para una tarea específica.
@@ -89,7 +91,7 @@ export default function ToDoRedux() {
   // EN: Exits edit mode and resets the related states.
   const cancelEdit = () => {
     setEditingId(null);
-    setEditingText("");
+    setEditingText('');
   };
 
   // ES: Confirma y guarda los cambios de la edición despachando la acción a Redux.
@@ -111,88 +113,103 @@ export default function ToDoRedux() {
 
   return (
     <>
-        <section style={{ maxWidth: 560, margin: "1.5rem auto", fontFamily: "sans-serif" }}>
-            <h2>ToDo (Redux)</h2>
+      <section
+        style={{
+          maxWidth: 560,
+          margin: '1.5rem auto',
+          fontFamily: 'sans-serif',
+        }}
+      >
+        <h2>ToDo (Redux)</h2>
 
-            {/* ES: Formulario para agregar nuevas tareas.
+        {/* ES: Formulario para agregar nuevas tareas.
             EN: Form to add new tasks. */}
-            <div style={{ display: "flex", gap: 8 }}>
-                <input
-                    placeholder="Add a task…"
-                    value={texto}
-                    onChange={(e) => setTexto(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleAddTodo()}
-                    style={{ flex: 1 }} />
-                <button onClick={handleAddTodo} disabled={!texto.trim()}>
-                    Add
-                </button>
-            </div>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input
+            placeholder="Add a task…"
+            value={texto}
+            onChange={(e) => setTexto(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddTodo()}
+            style={{ flex: 1 }}
+          />
+          <button onClick={handleAddTodo} disabled={!texto.trim()}>
+            Add
+          </button>
+        </div>
 
-            {/* ES: Renderizado condicional para los estados de carga y error.
+        {/* ES: Renderizado condicional para los estados de carga y error.
             EN: Conditional rendering for loading and error states. */}
-            {loading && <p>Loading…</p>}
-            {error && (
-                <p style={{ color: "crimson" }}>
-                    Error: {error} <button onClick={retry}>Retry</button>
-                </p>
-            )}
+        {loading && <p>Loading…</p>}
+        {error && (
+          <p style={{ color: 'crimson' }}>
+            Error: {error} <button onClick={retry}>Retry</button>
+          </p>
+        )}
 
-            {/* ES: La lista solo se muestra si no hay carga ni errores.
+        {/* ES: La lista solo se muestra si no hay carga ni errores.
             EN: The list is only shown if there is no loading and no errors. */}
-            {!loading && !error && (
-                <ul style={{ listStyle: "none", padding: 0, marginTop: 12 }}>
-                    {todos.map((todo) => (
-                        <li
-                            key={todo.id}
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "auto 1fr auto auto",
-                                alignItems: "center",
-                                gap: 8,
-                                borderTop: "1px solid #eee",
-                                padding: "6px 0",
-                            }}
-                        >
-                            <input
-                                type="checkbox"
-                                checked={todo.completado}
-                                onChange={() => dispatch(toggleTodo(todo.id))}
-                                aria-label={`Toggle ${todo.texto}`} />
+        {!loading && !error && (
+          <ul style={{ listStyle: 'none', padding: 0, marginTop: 12 }}>
+            {todos.map((todo) => (
+              <li
+                key={todo.id}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'auto 1fr auto auto',
+                  alignItems: 'center',
+                  gap: 8,
+                  borderTop: '1px solid #eee',
+                  padding: '6px 0',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={todo.completado}
+                  onChange={() => dispatch(toggleTodo(todo.id))}
+                  aria-label={`Toggle ${todo.texto}`}
+                />
 
-                            {/* ES: Renderizado condicional: o mostramos el input de edición o el texto normal.
+                {/* ES: Renderizado condicional: o mostramos el input de edición o el texto normal.
                             EN: Conditional rendering: we either show the edit input or the normal text. */}
-                            {editingId === todo.id ? (
-                                <>
-                                    <input
-                                        autoFocus
-                                        value={editingText}
-                                        onChange={(e) => setEditingText(e.target.value)}
-                                        onKeyDown={(e) => e.key === "Enter" && commitEdit()} />
-                                    <button onClick={commitEdit}>Save</button>
-                                    <button onClick={cancelEdit}>Cancel</button>
-                                </>
-                            ) : (
-                                <>
-                                    <span style={{ textDecoration: todo.completado ? "line-through" : "none" }}>
-                                        {todo.texto}
-                                    </span>
-                                    <button onClick={() => startEdit(todo)}>Edit</button>
-                                </>
-                            )}
+                {editingId === todo.id ? (
+                  <>
+                    <input
+                      autoFocus
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && commitEdit()}
+                    />
+                    <button onClick={commitEdit}>Save</button>
+                    <button onClick={cancelEdit}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <span
+                      style={{
+                        textDecoration: todo.completado
+                          ? 'line-through'
+                          : 'none',
+                      }}
+                    >
+                      {todo.texto}
+                    </span>
+                    <button onClick={() => startEdit(todo)}>Edit</button>
+                  </>
+                )}
 
-                            <button
-                                onClick={() => dispatch(eliminarTodo(todo.id))}
-                                aria-label={`Delete ${todo.texto}`}
-                            >
-                                ✕
-                            </button>
-                        </li>
-                    ))}
-                    {todos.length === 0 && !loading && <li>No items</li>}
-                </ul>
-            )}
-        </section>
-        <ToDoReduxUICode />
+                <button
+                  onClick={() => dispatch(eliminarTodo(todo.id))}
+                  aria-label={`Delete ${todo.texto}`}
+                >
+                  ✕
+                </button>
+              </li>
+            ))}
+            {todos.length === 0 && !loading && <li>No items</li>}
+          </ul>
+        )}
+      </section>
+      <ToDoReduxUICode />
     </>
   );
 }

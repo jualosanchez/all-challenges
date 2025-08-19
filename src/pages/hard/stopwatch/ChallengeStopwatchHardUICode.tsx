@@ -107,8 +107,8 @@ export default function ChallengeStopwatchHard() {
                         padding: "2px 6px",
                         borderRadius: 6,
                         background:
-                          ${"${"}stats && l.id === stats.bestId ? "#e6ffed" :
-                          ${"${"}stats && l.id === stats.worstId ? "#ffeaea" : "transparent"},
+                          ${'${'}stats && l.id === stats.bestId ? "#e6ffed" :
+                          ${'${'}stats && l.id === stats.worstId ? "#ffeaea" : "transparent"},
                       }}
                     >
                       {idx + 1}
@@ -131,5 +131,10 @@ export default function ChallengeStopwatchHard() {
 `;
 
 export default function ChallengeStopwatchHardUICode() {
-  return <CodeViewer code={codeString} title="Source Code: ChallengeStopwatchHard.tsx" />;
+  return (
+    <CodeViewer
+      code={codeString}
+      title="Source Code: ChallengeStopwatchHard.tsx"
+    />
+  );
 }

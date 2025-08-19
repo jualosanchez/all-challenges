@@ -1,7 +1,7 @@
 // En tu archivo: src/redux/store.ts
 
-import { configureStore } from "@reduxjs/toolkit";
-import todoReducer from "./todoSlice"; // Asegúrate de que la ruta a tu slice sea correcta
+import { configureStore } from '@reduxjs/toolkit';
+import todoReducer from './todoSlice'; // Asegúrate de que la ruta a tu slice sea correcta
 
 export const store = configureStore({
   reducer: {

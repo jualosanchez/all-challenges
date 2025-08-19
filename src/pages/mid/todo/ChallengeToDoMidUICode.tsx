@@ -211,10 +211,7 @@ export default function ChallengeToDoMid() {
 export default function ChallengeToDoMidUICode() {
   return (
     <div>
-      <CodeViewer
-        code={codeString}
-        title="Source Code: ChallengeToDoMid.tsx"
-      />
+      <CodeViewer code={codeString} title="Source Code: ChallengeToDoMid.tsx" />
     </div>
   );
 }

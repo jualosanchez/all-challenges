@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // ES: Define la interfaz para un solo objeto 'todo'.
 // EN: Defines the interface for a single 'todo' object.
@@ -13,7 +13,7 @@ interface Todo {
 const initialState: Todo[] = [];
 
 const todoSlice = createSlice({
-  name: "todos",
+  name: 'todos',
   initialState,
   reducers: {
     // ES: Reducer para añadir un nuevo todo. Recibe el texto como payload.

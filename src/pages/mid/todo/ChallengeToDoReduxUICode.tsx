@@ -94,7 +94,6 @@ root.render(
 );
 `;
 
-
 const codeString = `
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -294,8 +293,6 @@ export default function ToDoRedux() {
 }
 `;
 
-
-
 const codeList = `
 import TodoList from "./TodoList";
 
@@ -313,30 +310,12 @@ export default App;
 function ToDoReduxUICode() {
   return (
     <div>
-      <CodeViewer
-        code={codeLine}
-        title="Source Code: Code Line to add Redux"
-      />
-      <CodeViewer
-        code={codeSlice}
-        title="Source Code: redux/todoSlice.ts"
-      />
-      <CodeViewer
-        code={codeStore}
-        title="Source Code: reduxstore.ts"
-      />
-      <CodeViewer
-        code={codeApp}
-        title="Source Code: App"
-      />
-      <CodeViewer
-        code={codeString}
-        title="Source Code: ToDoRedux.tsx"
-      />
-      <CodeViewer
-        code={codeList}
-        title="Source Code: Call Component Todo"
-      />
+      <CodeViewer code={codeLine} title="Source Code: Code Line to add Redux" />
+      <CodeViewer code={codeSlice} title="Source Code: redux/todoSlice.ts" />
+      <CodeViewer code={codeStore} title="Source Code: reduxstore.ts" />
+      <CodeViewer code={codeApp} title="Source Code: App" />
+      <CodeViewer code={codeString} title="Source Code: ToDoRedux.tsx" />
+      <CodeViewer code={codeList} title="Source Code: Call Component Todo" />
     </div>
   );
 }
