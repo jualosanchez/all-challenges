@@ -1,4 +1,4 @@
-import CodeViewer from '../../CodeViewer';
+import CodeViewer from '../../../components/CodeViewer';
 
 const codeString = `
 import { useEffect, useState } from "react";

@@ -1,7 +1,7 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeStopwatchLow from '../components/low/stopwatch/ChallengeStopwatchLow';
-import ChallengeStopwatchMid from '../components/mid/stopwatch/ChallengeStopwatchMid';
-import ChallengeStopwatchHard from '../components/hard/stopwatch/ChallengeStopwatchHard';
+import ChallengeStopwatchLow from './low/stopwatch/ChallengeStopwatchLow';
+import ChallengeStopwatchMid from './mid/stopwatch/ChallengeStopwatchMid';
+import ChallengeStopwatchHard from './hard/stopwatch/ChallengeStopwatchHard';
 
 export default function ChallengeStopwatch() {
   return (

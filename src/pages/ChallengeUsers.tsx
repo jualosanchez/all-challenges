@@ -1,7 +1,7 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeUsersLow from '../components/low/users/ChallengeUsersLow';
-import ChallengeUsersMid from '../components/mid/users/ChallengeUsersMid';
-import ChallengeUsersHard from '../components/hard/users/ChallengeUsersHard';
+import ChallengeUsersLow from './low/users/ChallengeUsersLow';
+import ChallengeUsersMid from './mid/users/ChallengeUsersMid';
+import ChallengeUsersHard from './hard/users/ChallengeUsersHard';
 
 export default function ChallengeUsers() {
   return (

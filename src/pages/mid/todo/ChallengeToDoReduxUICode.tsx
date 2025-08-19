@@ -1,4 +1,4 @@
-import CodeViewer from './CodeViewer';
+import CodeViewer from '../../../components/CodeViewer';
 
 const codeLine = `
 npm install @reduxjs/toolkit react-redux
@@ -294,6 +294,8 @@ export default function ToDoRedux() {
 }
 `;
 
+
+
 const codeList = `
 import TodoList from "./TodoList";
 
@@ -308,7 +310,7 @@ function App() {
 export default App;
 `;
 
-export default function ToDoReduxUICode() {
+function ToDoReduxUICode() {
   return (
     <div>
       <CodeViewer
@@ -333,8 +335,10 @@ export default function ToDoReduxUICode() {
       />
       <CodeViewer
         code={codeList}
-        title="Source Code: Call copomete Todo"
+        title="Source Code: Call Component Todo"
       />
     </div>
   );
 }
+
+export default ToDoReduxUICode;

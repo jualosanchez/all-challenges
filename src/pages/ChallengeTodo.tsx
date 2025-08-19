@@ -1,8 +1,8 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeToDoLow from '../components/low/todo/ChallengeToDoLow';
-import ChallengeToDoMid from '../components/mid/todo/ChallengeToDoMid';
-import ChallengeToDoHard from '../components/hard/todo/ChallengeToDoHard';
-import ToDoRedux from '../components/ToDoRedux';
+import ChallengeToDoLow from './low/todo/ChallengeToDoLow';
+import ChallengeToDoMid from './mid/todo/ChallengeToDoMid';
+import ChallengeToDoHard from './hard/todo/ChallengeToDoHard';
+import ChallengeToDoReduxMid from './mid/todo/ChallengeToDoReduxMid';
 
 export default function ChallengeTodo() {
   return (
@@ -23,7 +23,7 @@ export default function ChallengeTodo() {
         <Route path="low" element={<ChallengeToDoLow />} />
         <Route path="mid" element={<ChallengeToDoMid />} />
         <Route path="hard" element={<ChallengeToDoHard />} />
-        <Route path="redux" element={<ToDoRedux />} />
+        <Route path="redux" element={<ChallengeToDoReduxMid />} />
         <Route path="*" element={<p>Not Found</p>} />
       </Routes>
     </section>

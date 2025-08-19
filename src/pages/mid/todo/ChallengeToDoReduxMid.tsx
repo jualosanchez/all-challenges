@@ -6,8 +6,8 @@ import {
   eliminarTodo,
   setTodos,
   editarTodo,
-} from "../redux/todoSlice";
-import { RootState, AppDispatch } from "../redux/store";
+} from "../../../redux/todoSlice";
+import { RootState, AppDispatch } from "../../../redux/store";
 import ToDoReduxUICode from "./ChallengeToDoReduxUICode";
 
 /**

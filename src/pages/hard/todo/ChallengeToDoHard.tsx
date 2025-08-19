@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ChallengeToDoHardUICode from "../../hard/todo/ChallengeToDoHardUICode";
+import ChallengeToDoHardUICode from "./ChallengeToDoHardUICode";
 
 /**
  * ES: HARD (realista 40') — ToDo con:
