@@ -1,8 +1,8 @@
 import CodeViewer from '../../../components/CodeViewer';
 
 const codeString = `
-import React, { useEffect, useMemo, useState } from "react";
-import ChallengeToDoHardUICode from "../../hard/todo/ChallengeToDoHardUICode";
+import React, { useEffect, useMemo, useState } from 'react';
+import ChallengeToDoHardUICode from './ChallengeToDoHardUICode';
 
 /**
  * ES: HARD (realista 40') — ToDo con:
@@ -21,7 +21,7 @@ export default function ChallengeToDoHard() {
   // ES: Definición de tipos para autocompletado y seguridad. 'View' es un "string literal type".
   // EN: Type definitions for autocomplete and safety. 'View' is a string literal type.
   type Todo = { id: number; title: string; completed: boolean };
-  type View = "all" | "active" | "completed";
+  type View = 'all' | 'active' | 'completed';
 
   // ES: Estado para la lista de tareas. Es la única "fuente de la verdad" para los datos.
   // EN: State for the todo list. It's the single source of truth for the data.
@@ -29,11 +29,11 @@ export default function ChallengeToDoHard() {
 
   // ES: Estado para el input de texto, un "componente controlado".
   // EN: State for the text input, a "controlled component".
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
 
   // ES: Estado para controlar qué filtro de vista está activo (Todos, Activos, Completados).
   // EN: State to control which view filter is active (All, Active, Completed).
-  const [view, setView] = useState<View>("all");
+  const [view, setView] = useState<View>('all');
 
   // ES: Estados para el ciclo de vida de la petición de red.
   // EN: States for the network request lifecycle.
@@ -43,7 +43,7 @@ export default function ChallengeToDoHard() {
   // ES: Estados para la edición inline. 'editingId' rastrea QUÉ ítem se edita, y 'editingText' su valor temporal.
   // EN: States for inline editing. 'editingId' tracks WHICH item is being edited, and 'editingText' its temporary value.
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
+  const [editingText, setEditingText] = useState('');
 
   /**
    * ES: Efecto para cargar datos iniciales cuando el componente se monta.
@@ -55,17 +55,19 @@ export default function ChallengeToDoHard() {
     // ---------- A) JSONPlaceholder ----------
     setLoading(true);
     setErr(null);
-    fetch("https://jsonplaceholder.typicode.com/todos?_limit=10")
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
       .then((r) => {
         // ES: Es buena práctica verificar si la respuesta de la red fue exitosa.
         // EN: It's good practice to check if the network response was successful.
-        if (!r.ok) throw new Error("Network error");
+        if (!r.ok) throw new Error('Network error');
         return r.json();
       })
-      .then((data: Array<{ id: number; title: string; completed: boolean }>) => {
-        setTodos(data);
-      })
-      .catch((e) => setErr(e.message || "Unknown fetch error"))
+      .then(
+        (data: Array<{ id: number; title: string; completed: boolean }>) => {
+          setTodos(data);
+        }
+      )
+      .catch((e) => setErr(e.message || 'Unknown fetch error'))
       .finally(() => setLoading(false));
 
     // ---------- B) DummyJSON (alternativa) ----------
@@ -87,17 +89,20 @@ export default function ChallengeToDoHard() {
     // ES: Actualización inmutable para no modificar el estado directamente.
     // EN: Immutable update to avoid mutating state directly.
     setTodos((p) => [...p, { id: Date.now(), title, completed: false }]);
-    setText("");
+    setText('');
   };
 
   // ES: Cambia el estado 'completed' de una tarea.
   // EN: Toggles the 'completed' state of a task.
   const toggle = (id: number) =>
-    setTodos((p) => p.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
+    setTodos((p) =>
+      p.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    );
 
   // ES: Elimina una tarea de la lista.
   // EN: Removes a task from the list.
-  const removeOne = (id: number) => setTodos((p) => p.filter((t) => t.id !== id));
+  const removeOne = (id: number) =>
+    setTodos((p) => p.filter((t) => t.id !== id));
 
   // ---------- Edición (como en MEDIO) / Editing (as in MID) ----------
   // ES: Inicia el modo de edición para una tarea específica.
@@ -120,22 +125,15 @@ export default function ChallengeToDoHard() {
   // EN: Exits edit mode and resets the related states.
   const cancelEdit = () => {
     setEditingId(null);
-    setEditingText("");
+    setEditingText('');
   };
 
   // ES: Mejora la UX y accesibilidad permitiendo usar el teclado para confirmar o cancelar la edición.
   // EN: Improves UX and accessibility by allowing the keyboard to be used to confirm or cancel an edit.
   const onEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") commitEdit();
-    if (e.key === "Escape") cancelEdit();
+    if (e.key === 'Enter') commitEdit();
+    if (e.key === 'Escape') cancelEdit();
   };
-
-  // ---------- Datos derivados / Derived data ----------
-  // ES: Calculamos el número de tareas pendientes. Usamos 'useMemo' para que este cálculo
-  //     solo se rehaga si el array 'todos' cambia, no en cada render. Es una optimización.
-  // EN: We calculate the number of pending tasks. We use 'useMemo' so this calculation
-  //     is only redone if the 'todos' array changes, not on every render. It's an optimization.
-  const activeCount = useMemo(() => todos.filter((t) => !t.completed).length, [todos]);
 
   // ES: Calculamos la lista de tareas visibles según el filtro seleccionado ('view').
   //     'useMemo' es clave aquí: evita filtrar el array en cada render, solo lo hace
@@ -147,9 +145,9 @@ export default function ChallengeToDoHard() {
   //     Important: this does not create new state, it's a derived value.
   const visible = useMemo(() => {
     switch (view) {
-      case "active":
+      case 'active':
         return todos.filter((t) => !t.completed);
-      case "completed":
+      case 'completed':
         return todos.filter((t) => t.completed);
       default:
         return todos;
@@ -158,44 +156,52 @@ export default function ChallengeToDoHard() {
 
   return (
     <>
-      <section style={{ maxWidth: 620, margin: "1.5rem auto", fontFamily: "sans-serif" }}>
+      <section
+        style={{
+          maxWidth: 620,
+          margin: '1.5rem auto',
+          fontFamily: 'sans-serif',
+        }}
+      >
         <h2>ToDo (Hard)</h2>
 
         {/* ES: La UI se divide en dos partes: la barra de entrada y los botones de filtro.
             EN: The UI is split into two parts: the input bar and the filter buttons. */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 8 }}>
-          <div style={{ display: "flex", gap: 8 }}>
+        <div
+          style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8 }}
+        >
+          <div style={{ display: 'flex', gap: 8 }}>
             <input
               placeholder="Add a task…"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && addTodo()}
+              onKeyDown={(e) => e.key === 'Enter' && addTodo()}
               style={{ flex: 1 }}
             />
             <button onClick={addTodo} disabled={!text.trim()}>
               Add
             </button>
           </div>
-          <div style={{ display: "flex", gap: 6 }}>
+          <div style={{ display: 'flex', gap: 6 }}>
             {/* ES: 'aria-pressed' es un atributo de accesibilidad que indica a los lectores de pantalla si un botón de tipo 'toggle' está activado.
                 EN: 'aria-pressed' is an accessibility attribute that tells screen readers if a toggle button is currently activated. */}
             <button
-              onClick={() => setView("all")}
-              aria-pressed={view === "all"}
+              onClick={() => setView('all')}
+              aria-pressed={view === 'all'}
               title="Show all"
             >
               All
             </button>
             <button
-              onClick={() => setView("active")}
-              aria-pressed={view === "active"}
+              onClick={() => setView('active')}
+              aria-pressed={view === 'active'}
               title="Show active"
             >
               Active
             </button>
             <button
-              onClick={() => setView("completed")}
-              aria-pressed={view === "completed"}
+              onClick={() => setView('completed')}
+              aria-pressed={view === 'completed'}
               title="Show completed"
             >
               Completed
@@ -206,19 +212,18 @@ export default function ChallengeToDoHard() {
         {/* ES: Renderizado condicional para los estados de carga y error.
             EN: Conditional rendering for loading and error states. */}
         {loading && <p>Loading…</p>}
-        {err && <p style={{ color: "crimson" }}>Error: {err}</p>}
+        {err && <p style={{ color: 'crimson' }}>Error: {err}</p>}
 
         {/* ES: La lista y el contador solo se muestran si no hay carga ni errores.
             EN: The list and counter are only shown if there is no loading and no errors. */}
         {!loading && !err && (
           <>
-            {/* ES: Mostramos el contador de tareas activas que calculamos con 'useMemo'.
-                EN: We display the active task counter that we calculated with 'useMemo'. */}
             <p style={{ opacity: 0.75, marginTop: 8 }}>
-              Active tasks: <b>{activeCount}</b>
+              {view.charAt(0).toUpperCase() + view.slice(1)} tasks:{' '}
+              <b>{visible.length}</b>
             </p>
 
-            <ul style={{ listStyle: "none", padding: 0, marginTop: 8 }}>
+            <ul style={{ listStyle: 'none', padding: 0, marginTop: 8 }}>
               {/* ES: Mapeamos sobre la lista 'visible' (ya filtrada), no sobre la lista completa 'todos'.
                   EN: We map over the 'visible' list (already filtered), not the complete 'todos' list. */}
               {visible.map((t) => {
@@ -227,12 +232,12 @@ export default function ChallengeToDoHard() {
                   <li
                     key={t.id}
                     style={{
-                      display: "grid",
-                      gridTemplateColumns: "auto 1fr auto auto",
-                      alignItems: "center",
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr auto auto',
+                      alignItems: 'center',
                       gap: 8,
-                      borderTop: "1px solid #eee",
-                      padding: "6px 0",
+                      borderTop: '1px solid #eee',
+                      padding: '6px 0',
                     }}
                   >
                     <input
@@ -266,7 +271,9 @@ export default function ChallengeToDoHard() {
                       <>
                         <span
                           style={{
-                            textDecoration: t.completed ? "line-through" : "none",
+                            textDecoration: t.completed
+                              ? 'line-through'
+                              : 'none',
                           }}
                         >
                           {t.title}
@@ -277,7 +284,10 @@ export default function ChallengeToDoHard() {
                       </>
                     )}
 
-                    <button onClick={() => removeOne(t.id)} aria-label={\`Delete \${t.title}\`}>
+                    <button
+                      onClick={() => removeOne(t.id)}
+                      aria-label={\`Delete \${t.title}\`}
+                    >
                       ✕
                     </button>
                   </li>
