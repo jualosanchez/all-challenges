@@ -34,6 +34,7 @@ const challenges = [
 const challengesMethods = [
   { name: 'Map', path: '/map/low' },
   { name: 'Filter', path: '/filter/low' },
+  { name: 'Metodos', path: 'https://jualo.uy/all-challenges/mem.pdf' },
 ];
 
 export default function App() {
