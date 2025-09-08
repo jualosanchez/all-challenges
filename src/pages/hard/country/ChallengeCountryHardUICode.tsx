@@ -89,15 +89,15 @@ function ChallengeCountryHard() {
 
   const isInputEmpty = query.trim() === '';
 
-  const filterCountries = !isLoading
-    ? data?.filter((countries) =>
-        countries.name.common.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
+  const allCountries = useMemo(() => {
+    if (isLoading) return [];
 
-  const pagCountries = !isLoading ? data?.slice(start, end) : [];
+    if (isInputEmpty) return data?.slice(start, end);
 
-  const paginateCountries = query ? filterCountries : pagCountries;
+    return data?.filter((countries) =>
+      countries.name.common.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [isLoading, isInputEmpty, data, start, end, query]);
 
   const dataEnd = data?.length ? data?.length : -1;
 

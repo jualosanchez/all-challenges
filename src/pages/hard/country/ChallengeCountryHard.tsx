@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import ChallengeCountryHardUICode from './ChallengeCountryHardUICode';
 import {
@@ -86,15 +86,15 @@ function ChallengeCountryHard() {
 
   const isInputEmpty = query.trim() === '';
 
-  const filterCountries = !isLoading
-    ? data?.filter((countries) =>
-        countries.name.common.toLowerCase().includes(query.toLowerCase())
-      )
-    : [];
+  const allCountries = useMemo(() => {
+    if (isLoading) return [];
 
-  const pagCountries = !isLoading ? data?.slice(start, end) : [];
+    if (isInputEmpty) return data?.slice(start, end);
 
-  const paginateCountries = query ? filterCountries : pagCountries;
+    return data?.filter((countries) =>
+      countries.name.common.toLowerCase().includes(query.toLowerCase())
+    );
+  }, [isLoading, isInputEmpty, data, start, end, query]);
 
   const dataEnd = data?.length ? data?.length : -1;
 
@@ -200,13 +200,12 @@ function ChallengeCountryHard() {
         <div className="saved-list">
           <h2>
             Todos Los Paises - Total: {data?.length ?? 0} Cantidad Anctual
-            listada: {paginateCountries?.length ?? 0}
+            listada: {allCountries?.length ?? 0}
           </h2>
           {isLoading ? (
             <p>Cargando...</p>
           ) : (
-            paginateCountries?.length &&
-            !isLoading && (
+            allCountries?.length && (
               <>
                 <table
                   width="100%"
@@ -222,7 +221,7 @@ function ChallengeCountryHard() {
                     </tr>
                   </thead>
                   <tbody style={{ textAlign: 'center' }}>
-                    {paginateCountries?.map((country) => (
+                    {allCountries?.map((country) => (
                       <tr
                         key={country.name.common}
                         style={{ borderTop: '1px solid #eee' }}
@@ -272,7 +271,7 @@ function ChallengeCountryHard() {
               </>
             )
           )}
-          {!paginateCountries?.length && <p>No hay países.</p>}
+          {!allCountries?.length && <p>No hay países.</p>}
         </div>
       </div>
       <ChallengeCountryHardUICode />
