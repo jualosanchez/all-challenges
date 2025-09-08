@@ -89,11 +89,13 @@ function ChallengeCountryHard() {
 
   const isInputEmpty = query.trim() === '';
 
-  const filterCountries = data?.filter((countries) =>
-    countries.name.common.toLowerCase().includes(query.toLowerCase())
-  );
+  const filterCountries = !isLoading
+    ? data?.filter((countries) =>
+        countries.name.common.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
 
-  const pagCountries = data?.slice(start, end);
+  const pagCountries = !isLoading ? data?.slice(start, end) : [];
 
   const paginateCountries = query ? filterCountries : pagCountries;
 
@@ -201,7 +203,7 @@ function ChallengeCountryHard() {
         <div className="saved-list">
           <h2>
             Todos Los Paises - Total: {data?.length ?? 0} Cantidad Anctual
-            litada: {paginateCountries?.length ?? 0}
+            listada: {paginateCountries?.length ?? 0}
           </h2>
           {isLoading ? (
             <p>Cargando...</p>

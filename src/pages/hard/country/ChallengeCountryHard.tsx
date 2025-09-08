@@ -86,11 +86,13 @@ function ChallengeCountryHard() {
 
   const isInputEmpty = query.trim() === '';
 
-  const filterCountries = data?.filter((countries) =>
-    countries.name.common.toLowerCase().includes(query.toLowerCase())
-  );
+  const filterCountries = !isLoading
+    ? data?.filter((countries) =>
+        countries.name.common.toLowerCase().includes(query.toLowerCase())
+      )
+    : [];
 
-  const pagCountries = data?.slice(start, end);
+  const pagCountries = !isLoading ? data?.slice(start, end) : [];
 
   const paginateCountries = query ? filterCountries : pagCountries;
 
@@ -127,7 +129,7 @@ function ChallengeCountryHard() {
             <div className="country-card">
               <h2>{countryInfo.name.common}</h2>
               <p>Capital: {countryInfo.capital?.[0] || 'N/A'}</p>
-              <p>Población: {countryInfo.population.toLocaleString()}</p>
+              <p>Población: {countryInfo.population?.toLocaleString()}</p>
               <img
                 src={countryInfo.flags.svg}
                 alt={`Bandera de ${countryInfo.name.common}`}
@@ -165,7 +167,7 @@ function ChallengeCountryHard() {
                   >
                     <td>{country.name.common}</td>
                     <td>{country.capital?.join(', ') ?? 'N/A'}</td>
-                    <td>{country.population.toLocaleString()}</td>
+                    <td>{country.population?.toLocaleString()}</td>
                     <td>
                       <img
                         src={country.flags.svg}
@@ -198,12 +200,13 @@ function ChallengeCountryHard() {
         <div className="saved-list">
           <h2>
             Todos Los Paises - Total: {data?.length ?? 0} Cantidad Anctual
-            litada: {paginateCountries?.length ?? 0}
+            listada: {paginateCountries?.length ?? 0}
           </h2>
           {isLoading ? (
             <p>Cargando...</p>
           ) : (
-            paginateCountries?.length && (
+            paginateCountries?.length &&
+            !isLoading && (
               <>
                 <table
                   width="100%"
@@ -219,17 +222,17 @@ function ChallengeCountryHard() {
                     </tr>
                   </thead>
                   <tbody style={{ textAlign: 'center' }}>
-                    {paginateCountries.map((country) => (
+                    {paginateCountries?.map((country) => (
                       <tr
                         key={country.name.common}
                         style={{ borderTop: '1px solid #eee' }}
                       >
                         <td>{country.name.common}</td>
                         <td>{country.capital?.join(', ') ?? 'N/A'}</td>
-                        <td>{country.population.toLocaleString()}</td>
+                        <td>{country.population?.toLocaleString()}</td>
                         <td>
                           <img
-                            src={country.flags.svg}
+                            src={country?.flags?.svg}
                             alt={`Bandera de ${country.name.common}`}
                             width={24}
                             height={16}
