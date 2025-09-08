@@ -283,6 +283,106 @@ function ChallengeCountryHard() {
 }
 
 export default ChallengeCountryHard;
+
+//----------------------------------------------------------
+
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import ChallengeCountryMid from './mid/country/ChallengeCountryMid';
+import ChallengeCountryLow from './low/country/ChallengeCountryLow';
+import ChallengeCountryHard from './hard/country/ChallengeCountryHard';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const client = new QueryClient();
+
+export default function ChallengeCountry() {
+  return (
+    <QueryClientProvider client={client}>
+      <section>
+        <h2>Challenge: Country</h2>
+
+        {/* Navegación local de niveles */}
+        <nav style={{ display: 'flex', gap: 8, margin: '8px 0' }}>
+          <Link to="low">Low</Link>
+          <Link to="mid">Mid</Link>
+          <Link to="hard">Hard</Link>
+        </nav>
+
+        {/* Rutas anidadas */}
+        <Routes>
+          <Route index element={<Navigate to="low" replace />} />
+          <Route path="low" element={<ChallengeCountryLow />} />
+          <Route path="mid" element={<ChallengeCountryMid />} />
+          <Route path="hard" element={<ChallengeCountryHard />} />
+          <Route path="*" element={<p>Not Found</p>} />
+        </Routes>
+      </section>
+    </QueryClientProvider>
+  );
+}
+
+//----------------------------------------------------------
+
+// En tu archivo: src/redux/store.ts
+
+import { configureStore } from '@reduxjs/toolkit';
+import todoReducer from './todoSlice'; // Asegúrate de que la ruta a tu slice sea correcta
+import countriesSlice from './countriesSlice'; // Asegúrate de que la ruta a tu slice sea correcta
+
+export const store = configureStore({
+  reducer: {
+    // Aquí van todos tus reducers
+    todos: todoReducer,
+    countries: countriesSlice,
+  },
+});
+
+// ¡Esta es la parte clave!
+// Infiere el tipo \`RootState\` directamente desde el store
+export type RootState = ReturnType<typeof store.getState>;
+
+// También es una buena práctica inferir y exportar el tipo AppDispatch
+export type AppDispatch = typeof store.dispatch;
+
+//----------------------------------------------------------------------
+// En tu archivo: src/redux/countriesSlice.ts
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+// ES: Define la interfaz para un solo objeto 'todo'.
+// EN: Defines the interface for a single 'todo' object.
+export interface Country {
+  name: {
+    common: string;
+  };
+  capital?: string[];
+  population: number;
+  flags: {
+    svg: string;
+  };
+}
+
+// ES: El estado inicial es un array vacío de todos.
+// EN: The initial state is an empty array of todos.
+const initialState: Country[] = [];
+
+const countrySlice = createSlice({
+  name: 'country',
+  initialState,
+  reducers: {
+    setSavedCountries(_, action: PayloadAction<Country[]>) {
+      return action.payload;
+    },
+    removeCountry(state, action: PayloadAction<string>) {
+      const filteredState = state.filter(
+        (country) =>
+          country.name.common.toLowerCase() !== action.payload.toLowerCase()
+      );
+      return filteredState;
+    },
+  },
+});
+export const { setSavedCountries, removeCountry } = countrySlice.actions;
+export default countrySlice.reducer;
 `;
 
 function ChallengeCountryHardUICode() {
