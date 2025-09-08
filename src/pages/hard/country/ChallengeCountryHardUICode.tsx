@@ -383,6 +383,22 @@ const countrySlice = createSlice({
 });
 export const { setSavedCountries, removeCountry } = countrySlice.actions;
 export default countrySlice.reducer;
+
+//----------------------------------------------------
+
+// Router en index
+<Container component="main" sx={{ mt: 4, mb: 4 }}>
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/todo/*" element={<ChallengeTodo />} />
+    <Route path="/stopwatch/*" element={<ChallengeStopwatch />} />
+    <Route path="/users/*" element={<ChallengeUsers />} />
+    <Route path="/country/*" element={<ChallengeCountry />} />
+    <Route path="/map/*" element={<ChallengeMap />} />
+    <Route path="/filter/*" element={<ChallengeFilter />} />
+    <Route path="*" element={<p>Not Found</p>} />
+  </Routes>
+</Container>
 `;
 
 function ChallengeCountryHardUICode() {
