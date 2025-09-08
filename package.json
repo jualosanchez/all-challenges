@@ -55,5 +55,8 @@
     "transformIgnorePatterns": [
       "[/\\\\\\\\_]node_modules[/\\\\\\\\_](?!react-router-dom|react-router)[/\\\\\\\\_].+\\.(js|jsx|mjs|cjs|ts|tsx)$"
     ]
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.87.1"
   }
 }
