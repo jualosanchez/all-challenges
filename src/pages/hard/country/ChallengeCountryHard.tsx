@@ -1,26 +1,29 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import ChallengeCountryHardUICode from './ChallengeCountryHardUICode';
+import {
+  Country,
+  setSavedCountries,
+  removeCountry,
+} from '../../../redux/countriesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../redux/store';
 
-// 1. Definimos las interfaces para los tipos de datos de la API
-interface Country {
-  name: {
-    common: string;
-  };
-  capital?: string[];
-  population: number;
-  flags: {
-    svg: string;
-  };
+const API_URL = 'https://restcountries.com/v3.1/';
+
+async function getAllCountries(): Promise<Country[]> {
+  const response = await fetch(
+    `${API_URL}all?fields=name,capital,population,flags`
+  );
+  if (!response.ok) throw new Error('Error en la red.');
+
+  const data: Country[] = await response.json();
+  return data;
 }
 
-const API_URL = 'https://restcountries.com/v3.1/name/';
-
-async function getAllCountries() {
-  const response = await fetch(
-    'https://restcountries.com/v3.1/all?fields=name'
-  );
-  if (!response.ok) throw new Error('País no encontrado.');
+async function getCountryByName(name: string): Promise<Country[]> {
+  const response = await fetch(`${API_URL}name/${name}`);
+  if (!response.ok) throw new Error('Pais no encontrado o error de red');
 
   const data: Country[] = await response.json();
   return data;
@@ -28,33 +31,38 @@ async function getAllCountries() {
 
 function ChallengeCountryHard() {
   // 2. Usamos los tipos de datos en los hooks de estado
+  const [start, setStart] = useState<number>(0);
+  const [end, setEnd] = useState<number>(10);
   const [query, setQuery] = useState<string>('');
   const [countryInfo, setCountryInfo] = useState<Country | null>(null);
-  const [savedCountries, setSavedCountries] = useState<Country[]>([]);
-  const [error, setError] = useState<string>('');
-  const { data, isLoading } = useQuery({
-    queryKey: ['countrieName'],
-    queryFn: getAllCountries,
+  const savedCountries = useSelector((state: RootState) => state.countries);
+  const dispatch: AppDispatch = useDispatch();
+
+  // 👇 Dos queries en un solo hook
+  const [
+    { data, isLoading },
+    { data: dataName, isLoading: isLoadingName, isError: error, refetch },
+  ] = useQueries({
+    queries: [
+      {
+        queryKey: ['countrieName'],
+        queryFn: getAllCountries,
+      },
+      {
+        queryKey: ['country', query],
+        queryFn: () => getCountryByName(query),
+        enabled: !!query, // la disparamos a mano con refetch()
+        retry: false,
+      },
+    ],
   });
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setCountryInfo(null);
-    setError('');
-
-    try {
-      const response = await fetch(`${API_URL}${query}`);
-      if (!response.ok) {
-        throw new Error('País no encontrado.');
-      }
-      const data: Country[] = await response.json();
-      setCountryInfo(data[0]);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-    }
+    refetch();
+    setCountryInfo(dataName?.[0] ?? null);
   };
 
   const handleSaveCountry = () => {
@@ -64,7 +72,7 @@ function ChallengeCountryHard() {
       );
 
       if (!isAlreadySaved) {
-        setSavedCountries([...savedCountries, countryInfo]);
+        dispatch(setSavedCountries([...savedCountries, countryInfo]));
       }
     }
   };
@@ -72,7 +80,8 @@ function ChallengeCountryHard() {
   const handleClear = () => {
     setQuery('');
     setCountryInfo(null);
-    setError('');
+    setStart(0);
+    setEnd(10);
   };
 
   const isInputEmpty = query.trim() === '';
@@ -80,6 +89,12 @@ function ChallengeCountryHard() {
   const filterCountries = data?.filter((countries) =>
     countries.name.common.toLowerCase().includes(query.toLowerCase())
   );
+
+  const pagCountries = data?.slice(start, end);
+
+  const paginateCountries = query ? filterCountries : pagCountries;
+
+  const dataEnd = data?.length ? data?.length : -1;
 
   return (
     <>
@@ -106,8 +121,9 @@ function ChallengeCountryHard() {
 
         <div className="info-area">
           {error && <p className="error">{error}</p>}
+          {isLoadingName && <p>Cargando país...</p>}
 
-          {countryInfo && (
+          {!isLoadingName && !error && countryInfo && (
             <div className="country-card">
               <h2>{countryInfo.name.common}</h2>
               <p>Capital: {countryInfo.capital?.[0] || 'N/A'}</p>
@@ -125,31 +141,135 @@ function ChallengeCountryHard() {
 
         <div className="saved-list">
           <h2>Países Guardados</h2>
-          <ul>
-            {savedCountries.map((country) => (
-              // Es buena práctica usar una key única, como el nombre del país
-              <li key={country.name.common}>{country.name.common}</li>
-            ))}
-          </ul>
-          {!savedCountries.length && <p>No hay países guardados.</p>}
+
+          {savedCountries.length ? (
+            <table
+              width="100%"
+              cellPadding={8}
+              style={{ borderCollapse: 'collapse' }}
+            >
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Capital</th>
+                  <th>Población</th>
+                  <th>Bandera</th>
+                  <th>Borrar</th>
+                </tr>
+              </thead>
+              <tbody style={{ textAlign: 'center' }}>
+                {savedCountries.map((country) => (
+                  <tr
+                    key={country.name.common}
+                    style={{ borderTop: '1px solid #eee' }}
+                  >
+                    <td>{country.name.common}</td>
+                    <td>{country.capital?.join(', ') ?? 'N/A'}</td>
+                    <td>{country.population.toLocaleString()}</td>
+                    <td>
+                      <img
+                        src={country.flags.svg}
+                        alt={`Bandera de ${country.name.common}`}
+                        width={24}
+                        height={16}
+                        style={{ display: 'inline' }}
+                      />
+                    </td>
+                    <td>
+                      <button
+                        onClick={() =>
+                          dispatch(removeCountry(country.name.common))
+                        }
+                      >
+                        Remover
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No hay países guardados.</p>
+          )}
         </div>
 
         <hr />
 
         <div className="saved-list">
-          <h2>Todos Los Paises</h2>
+          <h2>
+            Todos Los Paises - Total: {data?.length ?? 0} Cantidad Anctual
+            litada: {paginateCountries?.length ?? 0}
+          </h2>
           {isLoading ? (
             <p>Cargando...</p>
           ) : (
-            <ul>
-              {filterCountries &&
-                filterCountries.map((country) => (
-                  // Es buena práctica usar una key única, como el nombre del país
-                  <li key={country.name.common}>{country.name.common}</li>
-                ))}
-            </ul>
+            paginateCountries?.length && (
+              <>
+                <table
+                  width="100%"
+                  cellPadding={8}
+                  style={{ borderCollapse: 'collapse' }}
+                >
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Capital</th>
+                      <th>Población</th>
+                      <th>Bandera</th>
+                    </tr>
+                  </thead>
+                  <tbody style={{ textAlign: 'center' }}>
+                    {paginateCountries.map((country) => (
+                      <tr
+                        key={country.name.common}
+                        style={{ borderTop: '1px solid #eee' }}
+                      >
+                        <td>{country.name.common}</td>
+                        <td>{country.capital?.join(', ') ?? 'N/A'}</td>
+                        <td>{country.population.toLocaleString()}</td>
+                        <td>
+                          <img
+                            src={country.flags.svg}
+                            alt={`Bandera de ${country.name.common}`}
+                            width={24}
+                            height={16}
+                            style={{ display: 'inline' }}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {!query && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setStart((prev) => (prev >= 10 ? prev - 10 : prev));
+                        setEnd((prev) => (prev >= 20 ? prev - 10 : prev));
+                      }}
+                    >
+                      Anterior
+                    </button>
+                    <button
+                      onClick={() => {
+                        setStart((prev) => (prev >= 0 ? prev + 10 : 0));
+                        setEnd((prev) =>
+                          prev <= dataEnd ? prev + 10 : prev - (dataEnd - 1)
+                        );
+                      }}
+                      disabled={end + 10 >= dataEnd ? true : false}
+                    >
+                      Siguiente
+                    </button>
+                    <p>
+                      Inicio: {start} - Final: {end}
+                    </p>
+                  </>
+                )}
+              </>
+            )
           )}
-          {!filterCountries?.length && <p>No hay países.</p>}
+          {!paginateCountries?.length && <p>No hay países.</p>}
         </div>
       </div>
       <ChallengeCountryHardUICode />

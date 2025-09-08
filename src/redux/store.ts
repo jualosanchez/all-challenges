@@ -2,11 +2,13 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import todoReducer from './todoSlice'; // Asegúrate de que la ruta a tu slice sea correcta
+import countriesSlice from './countriesSlice'; // Asegúrate de que la ruta a tu slice sea correcta
 
 export const store = configureStore({
   reducer: {
     // Aquí van todos tus reducers
     todos: todoReducer,
+    countries: countriesSlice,
   },
 });
 

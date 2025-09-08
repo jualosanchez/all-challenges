@@ -19,6 +19,7 @@ function ChallengeCountryLow() {
   // 2. Usamos los tipos de datos en los hooks de estado
   const [query, setQuery] = useState<string>('');
   const [countryInfo, setCountryInfo] = useState<Country | null>(null);
+  const [savedCountries, setSavedCountries] = useState<Country[]>([]);
   const [error, setError] = useState<string>('');
 
   const handleSearch = async () => {
@@ -37,6 +38,18 @@ function ChallengeCountryLow() {
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
+      }
+    }
+  };
+
+  const handleSaveCountry = () => {
+    if (countryInfo) {
+      const isAlreadySaved = savedCountries.some(
+        (country) => country.name.common === countryInfo.name.common
+      );
+
+      if (!isAlreadySaved) {
+        setSavedCountries([...savedCountries, countryInfo]);
       }
     }
   };
@@ -64,6 +77,9 @@ function ChallengeCountryLow() {
           <button onClick={handleSearch} disabled={isInputEmpty}>
             Buscar
           </button>
+          <button onClick={handleSaveCountry} disabled={!countryInfo}>
+            Guardar
+          </button>
           <button onClick={handleClear} disabled={isInputEmpty}>
             Limpiar
           </button>
@@ -87,6 +103,17 @@ function ChallengeCountryLow() {
         </div>
 
         <hr />
+
+        <div className="saved-list">
+          <h2>Países Guardados</h2>
+          <ul>
+            {savedCountries.map((country) => (
+              // Es buena práctica usar una key única, como el nombre del país
+              <li key={country.name.common}>{country.name.common}</li>
+            ))}
+          </ul>
+          {!savedCountries.length && <p>No hay países guardados.</p>}
+        </div>
       </div>
       <ChallengeCountryLowUICode />
     </>

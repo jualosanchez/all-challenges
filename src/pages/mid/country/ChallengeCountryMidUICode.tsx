@@ -2,7 +2,8 @@ import CodeViewer from '../../../components/CodeViewer';
 
 const codeString = `
 import { useState } from 'react';
-import ChallengeCountryLowUICode from './ChallengeCountryLowUICode';
+import { useQuery } from '@tanstack/react-query';
+import ChallengeCountryMidUICode from './ChallengeCountryMidUICode';
 
 // 1. Definimos las interfaces para los tipos de datos de la API
 interface Country {
@@ -16,33 +17,52 @@ interface Country {
   };
 }
 
-const API_URL = 'https://restcountries.com/v3.1/name/';
+const API_URL = 'https://restcountries.com/v3.1/';
 
-function ChallengeCountryLow() {
+async function getAllCountries(): Promise<Country[]> {
+  const response = await fetch(\`\${API_URL}all?fields=name\`);
+  if (!response.ok) throw new Error('Error en la red.');
+
+  const data: Country[] = await response.json();
+  return data;
+}
+
+async function getCountryByName(name: string): Promise<Country[]> {
+  const response = await fetch(\`\${API_URL}name/\${name}\`);
+  if (!response.ok) throw new Error('Pais no encontrado o error de red');
+
+  const data: Country[] = await response.json();
+  return data;
+}
+
+function ChallengeCountryHard() {
   // 2. Usamos los tipos de datos en los hooks de estado
   const [query, setQuery] = useState<string>('');
   const [countryInfo, setCountryInfo] = useState<Country | null>(null);
   const [savedCountries, setSavedCountries] = useState<Country[]>([]);
-  const [error, setError] = useState<string>('');
+  const { data, isLoading } = useQuery({
+    queryKey: ['countrieName'],
+    queryFn: getAllCountries,
+  });
+
+  const {
+    data: dataName,
+    isLoading: isLoadingName,
+    isError: error,
+    refetch,
+  } = useQuery({
+    queryKey: ['country', query],
+    queryFn: () => getCountryByName(query),
+    enabled: !!query,
+    retry: false,
+  });
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     setCountryInfo(null);
-    setError('');
-
-    try {
-      const response = await fetch(\`\${API_URL}\${query}\`);
-      if (!response.ok) {
-        throw new Error('País no encontrado.');
-      }
-      const data: Country[] = await response.json();
-      setCountryInfo(data[0]);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
-    }
+    refetch();
+    setCountryInfo(dataName?.[0] ?? null);
   };
 
   const handleSaveCountry = () => {
@@ -60,10 +80,13 @@ function ChallengeCountryLow() {
   const handleClear = () => {
     setQuery('');
     setCountryInfo(null);
-    setError('');
   };
 
   const isInputEmpty = query.trim() === '';
+
+  const filterCountries = data?.filter((countries) =>
+    countries.name.common.toLowerCase().includes(query.toLowerCase())
+  );
 
   return (
     <>
@@ -90,8 +113,9 @@ function ChallengeCountryLow() {
 
         <div className="info-area">
           {error && <p className="error">{error}</p>}
+          {isLoadingName && <p>Cargando país...</p>}
 
-          {countryInfo && (
+          {!isLoadingName && !error && countryInfo && (
             <div className="country-card">
               <h2>{countryInfo.name.common}</h2>
               <p>Capital: {countryInfo.capital?.[0] || 'N/A'}</p>
@@ -117,24 +141,42 @@ function ChallengeCountryLow() {
           </ul>
           {!savedCountries.length && <p>No hay países guardados.</p>}
         </div>
+
+        <hr />
+
+        <div className="saved-list">
+          <h2>Todos Los Paises</h2>
+          {isLoading ? (
+            <p>Cargando...</p>
+          ) : (
+            <ul>
+              {filterCountries &&
+                filterCountries.map((country) => (
+                  // Es buena práctica usar una key única, como el nombre del país
+                  <li key={country.name.common}>{country.name.common}</li>
+                ))}
+            </ul>
+          )}
+          {!filterCountries?.length && <p>No hay países.</p>}
+        </div>
       </div>
-      <ChallengeCountryLowUICode />
+      <ChallengeCountryMidUICode />
     </>
   );
 }
 
-export default ChallengeCountryLow;
+export default ChallengeCountryHard;
 `;
 
-function ChallengeCountryLowUICode() {
+function ChallengeCountryMidUICode() {
   return (
     <div>
       <CodeViewer
         code={codeString}
-        title="Source Code: ChallengeCountryLow.tsx"
+        title="Source Code: ChallengeCountryMid.tsx"
       />
     </div>
   );
 }
 
-export default ChallengeCountryLowUICode;
+export default ChallengeCountryMidUICode;
