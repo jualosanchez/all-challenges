@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   Routes,
   Route,
@@ -16,19 +16,22 @@ import {
   MenuItem,
 } from '@mui/material';
 import Check from '@mui/icons-material/Check';
-import ChallengeTodo from './pages/ChallengeTodo';
-import ChallengeStopwatch from './pages/ChallengeStopwatch';
-import ChallengeUsers from './pages/ChallengeUsers';
 import Home from './pages/Home';
-import ChallengeCountry from './pages/ChallengeCountry';
-import ChallengeMap from './pages/ChallengeMap';
-import ChallengeFilter from './pages/ChallengeFilter';
+
+const ChallengeTodo = lazy(() => import('./pages/ChallengeTodo'));
+const ChallengeStopwatch = lazy(() => import('./pages/ChallengeStopwatch'));
+const ChallengeUsers = lazy(() => import('./pages/ChallengeUsers'));
+const ChallengeCountry = lazy(() => import('./pages/ChallengeCountry'));
+const ChallengeMap = lazy(() => import('./pages/ChallengeMap'));
+const ChallengeFilter = lazy(() => import('./pages/ChallengeFilter'));
+const ChallegeCatsfacts = lazy(() => import('./pages/ChallengeCatsFacts'));
 
 const challenges = [
   { name: 'ToDo', path: '/todo/low' },
   { name: 'Stopwatch', path: '/stopwatch/low' },
   { name: 'Users', path: '/users/low' },
   { name: 'Country', path: '/country/mid' },
+  { name: 'Cats Facts', path: '/cats-facts/low' },
 ];
 
 const challengesMethods = [
@@ -151,16 +154,19 @@ export default function App() {
       </AppBar>
 
       <Container component="main" sx={{ mt: 4, mb: 4 }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/todo/*" element={<ChallengeTodo />} />
-          <Route path="/stopwatch/*" element={<ChallengeStopwatch />} />
-          <Route path="/users/*" element={<ChallengeUsers />} />
-          <Route path="/country/*" element={<ChallengeCountry />} />
-          <Route path="/map/*" element={<ChallengeMap />} />
-          <Route path="/filter/*" element={<ChallengeFilter />} />
-          <Route path="*" element={<p>Not Found</p>} />
-        </Routes>
+        <Suspense fallback={<div>loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/todo/*" element={<ChallengeTodo />} />
+            <Route path="/stopwatch/*" element={<ChallengeStopwatch />} />
+            <Route path="/users/*" element={<ChallengeUsers />} />
+            <Route path="/country/*" element={<ChallengeCountry />} />
+            <Route path="/map/*" element={<ChallengeMap />} />
+            <Route path="/filter/*" element={<ChallengeFilter />} />
+            <Route path="/cats-facts/*" element={<ChallegeCatsfacts />} />
+            <Route path="*" element={<p>Not Found</p>} />
+          </Routes>
+        </Suspense>
       </Container>
     </Box>
   );
