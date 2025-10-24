@@ -1,14 +1,31 @@
+import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeCountryMid from './mid/country/ChallengeCountryMid';
-import ChallengeCountryLow from './low/country/ChallengeCountryLow';
-import ChallengeCountryHard from './hard/country/ChallengeCountryHard';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const client = new QueryClient();
+const ChallengeCountryMid = lazy(
+  () => import('./mid/country/ChallengeCountryMid')
+);
+const ChallengeCountryLow = lazy(
+  () => import('./low/country/ChallengeCountryLow')
+);
+const ChallengeCountryHard = lazy(
+  () => import('./hard/country/ChallengeCountryHard')
+);
 
 export default function ChallengeCountry() {
+  // Uso useState para crear el QueryClient una sola vez por montaje del componente
+  // y mantener estable la instancia entre re-renders.
+  const [qc] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 60_000, refetchOnWindowFocus: true },
+        },
+      })
+  );
+
   return (
-    <QueryClientProvider client={client}>
+    <QueryClientProvider client={qc}>
       <section>
         <h2>Challenge: Country</h2>
 
@@ -20,13 +37,15 @@ export default function ChallengeCountry() {
         </nav>
 
         {/* Rutas anidadas */}
-        <Routes>
-          <Route index element={<Navigate to="low" replace />} />
-          <Route path="low" element={<ChallengeCountryLow />} />
-          <Route path="mid" element={<ChallengeCountryMid />} />
-          <Route path="hard" element={<ChallengeCountryHard />} />
-          <Route path="*" element={<p>Not Found</p>} />
-        </Routes>
+        <Suspense fallback={<div>loading...</div>}>
+          <Routes>
+            <Route index element={<Navigate to="low" replace />} />
+            <Route path="low" element={<ChallengeCountryLow />} />
+            <Route path="mid" element={<ChallengeCountryMid />} />
+            <Route path="hard" element={<ChallengeCountryHard />} />
+            <Route path="*" element={<p>Not Found</p>} />
+          </Routes>
+        </Suspense>
       </section>
     </QueryClientProvider>
   );

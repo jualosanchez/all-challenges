@@ -1,8 +1,16 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Paper, Typography } from '@mui/material';
-import ChallengeFilterLow from './low/filter/ChallengeFilterLow';
-import ChallengeFilterMid from './mid/filter/ChallengeFilterMid';
-import ChallengeFilterHard from './hard/filter/ChallengeFilterHard';
+import { lazy, Suspense } from 'react';
+
+const ChallengeFilterLow = lazy(
+  () => import('./low/filter/ChallengeFilterLow')
+);
+const ChallengeFilterMid = lazy(
+  () => import('./mid/filter/ChallengeFilterMid')
+);
+const ChallengeFilterHard = lazy(
+  () => import('./hard/filter/ChallengeFilterHard')
+);
 
 export default function ChallengeFilter() {
   return (
@@ -27,14 +35,15 @@ export default function ChallengeFilter() {
           array original.
         </Typography>
       </Paper>
-
-      <Routes>
-        <Route index element={<Navigate to="low" replace />} />
-        <Route path="low" element={<ChallengeFilterLow />} />
-        <Route path="mid" element={<ChallengeFilterMid />} />
-        <Route path="hard" element={<ChallengeFilterHard />} />
-        <Route path="*" element={<p>Not Found</p>} />
-      </Routes>
+      <Suspense fallback={<div>loading...</div>}>
+        <Routes>
+          <Route index element={<Navigate to="low" replace />} />
+          <Route path="low" element={<ChallengeFilterLow />} />
+          <Route path="mid" element={<ChallengeFilterMid />} />
+          <Route path="hard" element={<ChallengeFilterHard />} />
+          <Route path="*" element={<p>Not Found</p>} />
+        </Routes>
+      </Suspense>
     </section>
   );
 }

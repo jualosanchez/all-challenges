@@ -1,8 +1,16 @@
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import { Paper, Typography } from '@mui/material';
-import ChallengeArrayMapLow from './low/map/ChallengeArrayMapLow';
-import ChallengeArrayMapMid from './mid/map/ChallengeArrayMapMid';
-import ChallengeArrayMapHard from './hard/map/ChallengeArrayMapHard';
+import { lazy, Suspense } from 'react';
+
+const ChallengeArrayMapLow = lazy(
+  () => import('./low/map/ChallengeArrayMapLow')
+);
+const ChallengeArrayMapMid = lazy(
+  () => import('./mid/map/ChallengeArrayMapMid')
+);
+const ChallengeArrayMapHard = lazy(
+  () => import('./hard/map/ChallengeArrayMapHard')
+);
 
 export default function ChallengeMap() {
   return (
@@ -27,13 +35,15 @@ export default function ChallengeMap() {
         </Typography>
       </Paper>
 
-      <Routes>
-        <Route index element={<Navigate to="low" replace />} />
-        <Route path="low" element={<ChallengeArrayMapLow />} />
-        <Route path="mid" element={<ChallengeArrayMapMid />} />
-        <Route path="hard" element={<ChallengeArrayMapHard />} />
-        <Route path="*" element={<p>Not Found</p>} />
-      </Routes>
+      <Suspense fallback={<div>loading...</div>}>
+        <Routes>
+          <Route index element={<Navigate to="low" replace />} />
+          <Route path="low" element={<ChallengeArrayMapLow />} />
+          <Route path="mid" element={<ChallengeArrayMapMid />} />
+          <Route path="hard" element={<ChallengeArrayMapHard />} />
+          <Route path="*" element={<p>Not Found</p>} />
+        </Routes>
+      </Suspense>
     </section>
   );
 }

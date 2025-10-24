@@ -15,7 +15,7 @@ function ChallengeCatsFactsLow() {
   }, []);
 
   useEffect(() => {
-    if (!factValue) return;
+    if (!factValue && !imgUrl) return;
 
     const threeFirstWords = factValue?.split(' ', 3).join(' ');
     fetch(`https://cataas.com/cat/says/${threeFirstWords}?size=50&json=true`)
@@ -24,7 +24,7 @@ function ChallengeCatsFactsLow() {
         const { url } = response;
         setImgUrl(url);
       });
-  }, [factValue]);
+  }, [factValue, imgUrl]);
 
   return (
     <>

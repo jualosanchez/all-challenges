@@ -1,8 +1,12 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
-import ChallengeToDoLow from './low/todo/ChallengeToDoLow';
-import ChallengeToDoMid from './mid/todo/ChallengeToDoMid';
-import ChallengeToDoHard from './hard/todo/ChallengeToDoHard';
-import ChallengeToDoReduxMid from './mid/todo/ChallengeToDoReduxMid';
+
+const ChallengeToDoLow = lazy(() => import('./low/todo/ChallengeToDoLow'));
+const ChallengeToDoMid = lazy(() => import('./mid/todo/ChallengeToDoMid'));
+const ChallengeToDoHard = lazy(() => import('./hard/todo/ChallengeToDoHard'));
+const ChallengeToDoReduxMid = lazy(
+  () => import('./mid/todo/ChallengeToDoReduxMid')
+);
 
 export default function ChallengeTodo() {
   return (
@@ -18,14 +22,16 @@ export default function ChallengeTodo() {
       </nav>
 
       {/* Rutas anidadas */}
-      <Routes>
-        <Route index element={<Navigate to="low" replace />} />
-        <Route path="low" element={<ChallengeToDoLow />} />
-        <Route path="mid" element={<ChallengeToDoMid />} />
-        <Route path="hard" element={<ChallengeToDoHard />} />
-        <Route path="redux" element={<ChallengeToDoReduxMid />} />
-        <Route path="*" element={<p>Not Found</p>} />
-      </Routes>
+      <Suspense fallback={<div>loading...</div>}>
+        <Routes>
+          <Route index element={<Navigate to="low" replace />} />
+          <Route path="low" element={<ChallengeToDoLow />} />
+          <Route path="mid" element={<ChallengeToDoMid />} />
+          <Route path="hard" element={<ChallengeToDoHard />} />
+          <Route path="redux" element={<ChallengeToDoReduxMid />} />
+          <Route path="*" element={<p>Not Found</p>} />
+        </Routes>
+      </Suspense>
     </section>
   );
 }
